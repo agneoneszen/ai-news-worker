@@ -1,0 +1,27 @@
+# 環境變數
+.env
+.env.local
+.env.*.local
+
+# 後端
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/serviceAccountKey.json
+
+# 前端
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# 系統檔案
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# 歷史資料
+Historical Data/
+

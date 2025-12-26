@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ai-news-worker
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scheduler.py
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+    healthCheckPath: /
+    plan: free
+
