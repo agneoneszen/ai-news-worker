@@ -69,7 +69,7 @@ export default function NewsCardHeader({ dateStr, id, createdAt }) {
             </span>
           </div>
           <div className="text-[9px] text-slate-500 font-mono">
-            UI v{new Date().toISOString().slice(0, 10).replace(/-/g, '.')}
+            UI {import.meta.env.VITE_APP_VERSION || new Date().toISOString().slice(0, 10).replace(/-/g, '.')}
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNewsData } from './hooks/useNewsData'; // ✨ 確保這裡有加花括號
 import NewsCard from './components/NewsCard/NewsCard';
 import { Loader2, AlertCircle, FileText } from 'lucide-react';
+import VersionInfo from './components/VersionInfo';
 
 export default function App() {
   const { news, loading, error } = useNewsData();
@@ -76,6 +77,8 @@ export default function App() {
           Daily automated news analysis and intelligence reports
         </p>
       </footer>
+      
+      <VersionInfo />
     </div>
   );
 }
