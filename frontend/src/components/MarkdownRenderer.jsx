@@ -20,6 +20,15 @@ import Card from './ui/Card';
  * 每個 H2 標題及其內容成為獨立卡片
  */
 export default function MarkdownRenderer({ content }) {
+  // 調試：記錄內容格式
+  React.useEffect(() => {
+    console.log('🔍 [MarkdownRenderer] 內容長度:', content?.length || 0);
+    console.log('🔍 [MarkdownRenderer] 內容前 500 字:', content?.substring(0, 500));
+    console.log('🔍 [MarkdownRenderer] 是否包含 ## :', content?.includes('## '));
+    const h2Matches = content?.match(/^##\s+.+$/gm) || [];
+    console.log('🔍 [MarkdownRenderer] 找到的 H2 標題:', h2Matches);
+  }, [content]);
+
   // 圖示映射 - 擴展匹配邏輯
   const iconMapping = {
     '市場情緒': BarChart3,
@@ -58,33 +67,43 @@ export default function MarkdownRenderer({ content }) {
 
   // 將內容分割成區塊（每個 H2 及其內容）
   const sections = useMemo(() => {
-    if (!content) return [];
+    if (!content) {
+      console.log('⚠️ [MarkdownRenderer] 內容為空');
+      return [];
+    }
     
     const lines = content.split('\n');
     const sections = [];
     let currentSection = null;
     let currentContent = [];
     
+    console.log('🔍 [MarkdownRenderer] 總行數:', lines.length);
+    
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       
-      // 檢查是否為 H2 標題（## 開頭）
-      if (line.startsWith('## ')) {
+      // 檢查是否為 H2 標題（## 開頭，可能前面有空格）
+      if (line.trim().startsWith('## ')) {
         // 保存上一個區塊
         if (currentSection) {
           sections.push({
             ...currentSection,
             content: currentContent.join('\n').trim()
           });
+          console.log(`✅ [MarkdownRenderer] 完成區塊: ${currentSection.title}, 內容長度: ${currentContent.join('\n').trim().length}`);
         }
         
         // 開始新區塊
-        const title = line.replace(/^##\s+/, '').trim();
+        const title = line.replace(/^#+\s+/, '').trim();
         currentSection = {
           title,
           isTLDR: title.includes('TL;DR') || title.includes('三句話') || title.includes('今日三句話')
         };
         currentContent = [];
+        console.log(`📌 [MarkdownRenderer] 發現新區塊: ${title}`);
+      } else if (line.trim().startsWith('### ')) {
+        // H3 標題也加入當前區塊內容
+        currentContent.push(line);
       } else {
         // 累積內容
         currentContent.push(line);
@@ -97,15 +116,30 @@ export default function MarkdownRenderer({ content }) {
         ...currentSection,
         content: currentContent.join('\n').trim()
       });
+      console.log(`✅ [MarkdownRenderer] 完成最後區塊: ${currentSection.title}, 內容長度: ${currentContent.join('\n').trim().length}`);
     }
+    
+    console.log(`📊 [MarkdownRenderer] 總共分割成 ${sections.length} 個區塊`);
+    sections.forEach((section, idx) => {
+      console.log(`  ${idx + 1}. ${section.title} (${section.content.length} 字元)`);
+    });
     
     return sections;
   }, [content]);
 
-  // 如果沒有找到 H2 區塊，使用原始渲染
+  // 如果沒有找到 H2 區塊，使用原始渲染並顯示警告
   if (sections.length === 0) {
+    console.warn('⚠️ [MarkdownRenderer] 未找到 H2 區塊，使用原始渲染');
     return (
       <div className="space-y-6 max-w-4xl mx-auto">
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-4">
+          <p className="text-yellow-400 text-sm">
+            ⚠️ 調試信息：未檢測到 H2 標題格式，使用原始 Markdown 渲染
+          </p>
+          <p className="text-yellow-500/70 text-xs mt-2">
+            內容前 200 字: {content?.substring(0, 200)}
+          </p>
+        </div>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           className="markdown-content"

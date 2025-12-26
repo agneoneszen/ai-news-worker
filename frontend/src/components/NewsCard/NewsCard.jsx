@@ -22,11 +22,13 @@ export default function NewsCard({ data }) {
     >
       <NewsCardHeader 
         dateStr={data.date_str} 
-        id={data.id} 
+        id={data.id}
+        createdAt={data.created_at}
       />
       
       <NewsCardContent 
-        content={data.content} 
+        content={data.content}
+        data={data}
       />
       
       <NewsCardFooter
