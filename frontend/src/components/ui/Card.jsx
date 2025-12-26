@@ -32,11 +32,11 @@ export default function Card({
   };
 
   const baseClasses = `
-    bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95
+    bg-gradient-to-br from-slate-800/90 via-slate-700/80 to-slate-800/90
     ${roundedClasses[rounded]}
-    ${border ? 'border-2 border-slate-700/50' : ''}
-    ${shadow ? 'shadow-2xl' : ''}
-    ${hover ? 'transition-all duration-300 hover:border-primary-500/30 hover:shadow-glow-primary' : ''}
+    ${border ? 'border-2 border-slate-600/60' : ''}
+    ${shadow ? 'shadow-2xl shadow-black/20' : ''}
+    ${hover ? 'transition-all duration-300 hover:border-primary-500/50 hover:shadow-glow-primary' : ''}
     ${paddingClasses[padding]}
     ${className}
   `.trim().replace(/\s+/g, ' ');

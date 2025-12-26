@@ -27,6 +27,7 @@ export default function MarkdownRenderer({ content }) {
     console.log('🔍 [MarkdownRenderer] 是否包含 ## :', content?.includes('## '));
     const h2Matches = content?.match(/^##\s+.+$/gm) || [];
     console.log('🔍 [MarkdownRenderer] 找到的 H2 標題:', h2Matches);
+    console.log('🔍 [MarkdownRenderer] H2 標題數量:', h2Matches.length);
   }, [content]);
 
   // 圖示映射 - 擴展匹配邏輯
