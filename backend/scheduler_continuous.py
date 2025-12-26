@@ -10,6 +10,7 @@ import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 引入模組
 from ai_service import analyze_article, analyze_category_group, generate_daily_briefing
@@ -62,29 +63,42 @@ def job_pipeline():
         print("🛑 任務終止，未寫入任何資料，以確保無幻覺。")
         return
 
-    # B. 單篇分類分析
-    print(f"🧠 [2/5] 正在分類 {len(raw_news_list)} 篇新聞...")
+    # B. 單篇分類分析（並行處理以提升效率）
+    print(f"🧠 [2/5] 正在分類 {len(raw_news_list)} 篇新聞（並行處理）...")
     
     categorized_articles = defaultdict(list)
     
-    for news in raw_news_list:
-        # 呼叫 AI 分析獲取分類（傳入 metadata）
-        analysis_result = analyze_article(
-            text=news.get("content", ""),
-            title=news.get("title", ""),
-            source=news.get("source", ""),
-            published_at=news.get("published_at", "")
-        )
+    # 使用並行處理加速分析（最多 5 個並行）
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {
+            executor.submit(
+                analyze_article,
+                text=news.get("content", ""),
+                title=news.get("title", ""),
+                source=news.get("source", ""),
+                published_at=news.get("published_at", "")
+            ): news
+            for news in raw_news_list
+        }
         
-        if analysis_result:
-            # 合併 AI 分析結果
-            processed_news = {**news, **analysis_result}
-            category = analysis_result.get('category', '未分類')
-            categorized_articles[category].append(processed_news)
-            confidence = analysis_result.get('confidence', 0.0)
-            print(f"  - 已分類: {news['title'][:30]}... -> {category} (信心度: {confidence:.2f})")
-        else:
-            print(f"  - 分析失敗跳過: {news['title'][:30]}...")
+        completed = 0
+        for future in as_completed(futures):
+            news = futures[future]
+            completed += 1
+            try:
+                analysis_result = future.result()
+                
+                if analysis_result:
+                    # 合併 AI 分析結果
+                    processed_news = {**news, **analysis_result}
+                    category = analysis_result.get('category', '未分類')
+                    categorized_articles[category].append(processed_news)
+                    confidence = analysis_result.get('confidence', 0.0)
+                    print(f"  [{completed}/{len(raw_news_list)}] 已分類: {news['title'][:30]}... -> {category} (信心度: {confidence:.2f})")
+                else:
+                    print(f"  [{completed}/{len(raw_news_list)}] 分析失敗跳過: {news['title'][:30]}...")
+            except Exception as e:
+                print(f"  [{completed}/{len(raw_news_list)}] 分析異常: {news['title'][:30]}... - {e}")
 
     if not categorized_articles:
         print("❌ 所有新聞分析皆失敗，終止任務。")

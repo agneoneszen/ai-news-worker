@@ -157,19 +157,25 @@ def analyze_category_group(category_name, articles_in_category):
             'why_it_matters': why_it_matters
         })
     
-    # 構建輸入內容（使用結構化資料，更省 token）
+    # 構建輸入內容（使用結構化資料，更省 token，進一步優化）
     combined_input = ""
     for art in article_data:
-        combined_input += f"\n\n【{art['title']}】\n"
-        combined_input += f"摘要：{art['summary']}\n"
+        combined_input += f"\n【{art['title']}】\n"
+        # 限制摘要長度以節省 token
+        summary = art['summary'][:200] if len(art['summary']) > 200 else art['summary']
+        combined_input += f"摘要：{summary}\n"
+        
+        # 只取前 2 個重點
         if art.get('highlights'):
             if isinstance(art['highlights'], list) and len(art['highlights']) > 0:
                 if isinstance(art['highlights'][0], dict):
-                    highlights_str = "; ".join([h.get('point', '') for h in art['highlights'][:3]])
+                    highlights_str = "; ".join([h.get('point', '') for h in art['highlights'][:2]])
                 else:
-                    highlights_str = "; ".join(art['highlights'][:3])
+                    highlights_str = "; ".join(art['highlights'][:2])
                 combined_input += f"重點：{highlights_str}\n"
-        combined_input += f"洞察：{art.get('insight', '')}\n"
+        
+        # 只傳遞關鍵資訊
+        combined_input += f"洞察：{art.get('insight', '')[:80]}\n"  # 限制洞察長度
         combined_input += f"重要性：{art.get('why_it_matters', '')}\n"
         combined_input += f"情緒：{art.get('sentiment', 'neutral')}\n"
     
