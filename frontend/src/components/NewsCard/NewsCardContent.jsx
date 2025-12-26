@@ -7,7 +7,7 @@ import DebugInfo from '../DebugInfo';
  */
 export default function NewsCardContent({ content, data }) {
   return (
-    <div className="p-8 sm:p-10 px-6 sm:px-8">
+    <div className="p-6 sm:p-8">
       <DebugInfo data={data} />
       <MarkdownRenderer content={content} />
     </div>

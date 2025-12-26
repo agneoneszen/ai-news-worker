@@ -36,44 +36,35 @@ export default function NewsCardHeader({ dateStr, id, createdAt }) {
   };
 
   return (
-    <div className="bg-gradient-to-r from-slate-800/80 via-slate-700/60 to-slate-800/80 px-8 py-6 border-b border-slate-700/50 backdrop-blur-sm">
-      <div className="flex items-start justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <Icon 
-            icon={Calendar} 
-            size={24}
-            color="primary"
-            container
-            containerSize="lg"
-          />
+    <header className="bg-slate-800/60 px-6 py-4 border-b border-slate-700/50">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-slate-700/50 rounded-lg">
+            <Calendar size={18} className="text-blue-400" />
+          </div>
           <div>
-            <span className="text-[11px] text-slate-400 uppercase tracking-[0.2em] block font-semibold mb-1.5">
-              Intelligence Report
+            <span className="text-xs text-slate-400 uppercase tracking-wide block font-medium mb-0.5">
+              每日報告
             </span>
-            <span className="text-primary-400 font-mono font-bold text-2xl tracking-wider block">
+            <span className="text-slate-100 font-semibold text-xl block">
               {dateStr || id}
             </span>
             {createdAt && (
-              <span className="text-[10px] text-slate-500 mt-1 block">
-                生成時間: {formatTimestamp(createdAt)}
+              <span className="text-xs text-slate-500 mt-0.5 block">
+                {formatTimestamp(createdAt)}
               </span>
             )}
           </div>
         </div>
         
-        <div className="flex flex-col items-end gap-2">
-          <div className="flex items-center gap-2 px-4 py-2 bg-semantic-info-main/10 border border-semantic-info-main/30 rounded-full backdrop-blur-sm">
-            <Zap size={16} className="text-semantic-info-light" />
-            <span className="text-[11px] text-semantic-info-light font-bold uppercase tracking-tight">
-              AI Processed
-            </span>
-          </div>
-          <div className="text-[9px] text-slate-500 font-mono">
-            UI {import.meta.env.VITE_APP_VERSION || new Date().toISOString().slice(0, 10).replace(/-/g, '.')}
-          </div>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <Zap size={14} className="text-blue-400" />
+          <span className="text-xs text-blue-400 font-medium">
+            AI
+          </span>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
 

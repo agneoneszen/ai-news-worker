@@ -12,29 +12,21 @@ export default function NewsCardFooter({
   categories = [] 
 }) {
   return (
-    <div className="px-8 py-6 bg-slate-900/60 border-t border-slate-700/50 backdrop-blur-sm">
-      <div className="flex flex-wrap gap-4 items-center justify-between">
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-2 px-4 py-2 bg-semantic-success-main/10 border border-semantic-success-main/30 rounded-lg">
-            <Icon 
-              icon={TrendingUp} 
-              size={16}
-              color="success"
-            />
-            <span className="text-xs text-text-secondary font-medium">
-              來源: <span className="text-semantic-success-light font-bold">{articleCount}</span> 篇
+    <footer className="px-6 py-4 bg-slate-800/40 border-t border-slate-700/50">
+      <div className="flex flex-wrap gap-3 items-center justify-between">
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-700/50 rounded-lg">
+            <TrendingUp size={14} className="text-blue-400" />
+            <span className="text-xs text-slate-300 font-medium">
+              <span className="text-blue-400 font-semibold">{articleCount}</span> 篇文章
             </span>
           </div>
           
           {categoryCount && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-              <Icon 
-                icon={FileText} 
-                size={16}
-                color="info"
-              />
-              <span className="text-xs text-text-secondary font-medium">
-                分類: <span className="text-purple-400 font-bold">{categoryCount}</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-700/50 rounded-lg">
+              <FileText size={14} className="text-blue-400" />
+              <span className="text-xs text-slate-300 font-medium">
+                <span className="text-blue-400 font-semibold">{categoryCount}</span> 個分類
               </span>
             </div>
           )}
@@ -43,19 +35,17 @@ export default function NewsCardFooter({
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {categories.map((category, i) => (
-              <Badge 
+              <span 
                 key={i} 
-                variant="default"
-                size="md"
-                className="hover:border-primary-500/50"
+                className="px-2.5 py-1 bg-slate-700/50 text-slate-300 text-xs rounded-md border border-slate-600/50"
               >
                 {category}
-              </Badge>
+              </span>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </footer>
   );
 }
 
