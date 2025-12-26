@@ -6,7 +6,7 @@ import MarkdownRenderer from '../MarkdownRenderer';
  */
 export default function NewsCardContent({ content }) {
   return (
-    <div className="p-8 sm:p-10">
+    <div className="p-8 sm:p-10 px-6 sm:px-8">
       <MarkdownRenderer content={content} />
     </div>
   );

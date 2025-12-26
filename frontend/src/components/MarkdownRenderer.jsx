@@ -55,7 +55,7 @@ export default function MarkdownRenderer({ content }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-4xl mx-auto">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -68,8 +68,8 @@ export default function MarkdownRenderer({ content }) {
             
             if (isTLDR) {
               return (
-                <div className="bg-gradient-to-r from-primary-500/15 via-primary-600/10 to-primary-500/15 rounded-2xl border-2 border-primary-500/40 p-6 mb-8 shadow-lg shadow-glow-primary">
-                  <div className="flex items-center gap-3 mb-4">
+                <div className="bg-gradient-to-r from-primary-500/15 via-primary-600/10 to-primary-500/15 rounded-2xl border-2 border-primary-500/40 p-8 mb-10 shadow-lg shadow-glow-primary text-center">
+                  <div className="flex items-center justify-center gap-3 mb-6">
                     <Icon 
                       icon={Zap} 
                       container 
@@ -102,8 +102,8 @@ export default function MarkdownRenderer({ content }) {
             
             if (isTLDR) {
               return (
-                <div className="bg-gradient-to-r from-primary-500/15 via-primary-600/10 to-primary-500/15 rounded-2xl border-2 border-primary-500/40 p-6 mb-8 shadow-lg shadow-glow-primary">
-                  <div className="flex items-center gap-3 mb-4">
+                <div className="bg-gradient-to-r from-primary-500/15 via-primary-600/10 to-primary-500/15 rounded-2xl border-2 border-primary-500/40 p-8 mb-10 shadow-lg shadow-glow-primary text-center">
+                  <div className="flex items-center justify-center gap-3 mb-6">
                     <Icon 
                       icon={Zap} 
                       container 
@@ -124,12 +124,12 @@ export default function MarkdownRenderer({ content }) {
             const IconComponent = icon;
             
             return (
-              <div className="bg-slate-800/60 rounded-xl border border-slate-700/50 p-5 mb-6 mt-8 hover:border-primary-500/30 transition-all duration-300">
-                <div className="flex items-center gap-3">
+              <div className="bg-slate-800/60 rounded-xl border border-slate-700/50 p-6 mb-8 mt-8 hover:border-primary-500/30 transition-all duration-300 shadow-lg">
+                <div className="flex items-center justify-center gap-3 mb-4">
                   <div className="p-2.5 bg-primary-500/15 rounded-lg border border-primary-500/30 flex-shrink-0">
                     <IconComponent size={20} className="text-primary-400" />
                   </div>
-                  <h2 className="text-xl font-bold text-primary-300 m-0 flex-1">
+                  <h2 className="text-xl font-bold text-primary-300 m-0 text-center">
                     {children}
                   </h2>
                 </div>
@@ -138,20 +138,30 @@ export default function MarkdownRenderer({ content }) {
           },
           
           
-          // H3 樣式 - 子標題
+          // H3 樣式 - 子標題（置中）
           h3: ({node, children, ...props}) => (
-            <h3 className="text-lg font-semibold text-primary-200 mt-6 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-primary-200 mt-6 mb-4 flex items-center justify-center gap-2">
               <div className="w-1.5 h-1.5 bg-primary-400 rounded-full"></div>
               {children}
             </h3>
           ),
           
-          // 段落樣式
-          p: ({node, children, ...props}) => (
-            <p className="text-text-secondary leading-relaxed mb-5 text-base">
-              {children}
-            </p>
-          ),
+          // 段落樣式 - 置中排版
+          p: ({node, children, ...props}) => {
+            const content = String(children);
+            // TL;DR 區塊後的段落也置中
+            const isInTLDR = node.parent?.children?.some(
+              (sibling) => sibling.type === 'heading' && 
+              (String(sibling.children?.[0]?.value || '').includes('TL;DR') || 
+               String(sibling.children?.[0]?.value || '').includes('三句話'))
+            );
+            
+            return (
+              <p className={`text-text-secondary leading-relaxed mb-5 text-base ${isInTLDR ? 'text-center max-w-3xl mx-auto' : ''}`}>
+                {children}
+              </p>
+            );
+          },
           
           // 連結樣式
           a: ({node, href, children, ...props}) => (
@@ -167,7 +177,7 @@ export default function MarkdownRenderer({ content }) {
             </a>
           ),
           
-          // 無序列表 - 檢查是否為監測清單
+          // 無序列表 - 檢查是否為監測清單，並置中排版
           ul: ({node, children, ...props}) => {
             // 檢查父節點是否是監測清單（通過檢查前一個兄弟節點）
             const parent = node.parent;
@@ -188,14 +198,14 @@ export default function MarkdownRenderer({ content }) {
             
             if (isChecklist) {
               return (
-                <ul className="space-y-3 my-5 ml-4 list-none">
+                <ul className="space-y-3 my-5 mx-auto max-w-2xl list-none">
                   {children}
                 </ul>
               );
             }
             
             return (
-              <ul className="space-y-3 my-5 ml-4 list-disc marker:text-primary-500">
+              <ul className="space-y-3 my-5 mx-auto max-w-3xl list-disc marker:text-primary-500">
                 {children}
               </ul>
             );
