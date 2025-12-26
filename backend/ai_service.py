@@ -2,13 +2,23 @@ import os
 import json
 from openai import OpenAI
 from dotenv import load_dotenv
+from cache_manager import (
+    get_content_hash, 
+    get_cached_result, 
+    save_cached_result,
+    clear_expired_cache
+)
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# 啟動時清除過期快取
+clear_expired_cache()
+
 def analyze_article(text, title="", source="", published_at=""):
     """
     分析單篇文章，回傳優化版 JSON 結構（帶證據、可決策）
+    使用快取避免重複分析相同內容
     
     Args:
         text: 新聞內容
@@ -23,6 +33,14 @@ def analyze_article(text, title="", source="", published_at=""):
     """
     if not text: 
         return None
+    
+    # 檢查快取
+    metadata = {'title': title, 'source': source}
+    cache_key = get_content_hash(text, metadata)
+    cached_result = get_cached_result(cache_key, cache_type="article")
+    
+    if cached_result:
+        return cached_result
     
     # 避免 Token 爆量，截取前 2500 字
     input_text = text[:2500]
@@ -107,6 +125,15 @@ def analyze_article(text, title="", source="", published_at=""):
             response_format={"type": "json_object"}
         )
         result = json.loads(response.choices[0].message.content)
+        
+        # 儲存到快取
+        save_cached_result(
+            cache_key, 
+            result, 
+            cache_type="article",
+            metadata={'title': title, 'source': source, 'published_at': published_at}
+        )
+        
         return result
     except Exception as e:
         print(f"❌ AI 分析失敗: {e}")
@@ -115,6 +142,7 @@ def analyze_article(text, title="", source="", published_at=""):
 def analyze_category_group(category_name, articles_in_category):
     """
     分析同一分類的多篇文章，生成統合分析（優化版：去重、抽主線、產出可追蹤信號）
+    使用快取避免重複分析相同分類組合
     
     Args:
         category_name: 分類名稱
@@ -126,6 +154,18 @@ def analyze_category_group(category_name, articles_in_category):
     """
     if not articles_in_category:
         return None
+    
+    # 檢查快取（基於分類名稱和文章標題組合）
+    article_titles = [art.get('title', '') for art in articles_in_category]
+    cache_content = f"{category_name}:{','.join(sorted(article_titles))}"
+    cache_key = get_content_hash(cache_content)
+    cached_result = get_cached_result(cache_key, cache_type="category")
+    
+    if cached_result:
+        # 更新 article_count 和 article_titles（可能不同）
+        cached_result['article_count'] = len(articles_in_category)
+        cached_result['article_titles'] = article_titles
+        return cached_result
     
     # 準備文章資料（使用結構化結果而非原始內容）
     article_data = []
@@ -253,6 +293,15 @@ def analyze_category_group(category_name, articles_in_category):
         result = json.loads(response.choices[0].message.content)
         result['article_count'] = len(articles_in_category)
         result['article_titles'] = article_titles
+        
+        # 儲存到快取
+        save_cached_result(
+            cache_key,
+            result,
+            cache_type="category",
+            metadata={'category': category_name, 'article_count': len(articles_in_category)}
+        )
+        
         return result
     except Exception as e:
         print(f"❌ 分類分析失敗 ({category_name}): {e}")
