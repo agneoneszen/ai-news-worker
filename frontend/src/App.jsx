@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNewsData } from './hooks/useNewsData'; // ✨ 確保這裡有加花括號
-import NewsCard from './components/NewsCard';
+import NewsCard from './components/NewsCard/NewsCard';
 import { Loader2, AlertCircle, FileText } from 'lucide-react';
 
 export default function App() {
