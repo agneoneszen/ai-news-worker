@@ -6,6 +6,10 @@
 import os
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+# 載入 .env 檔案
+load_dotenv()
 
 def check_file_exists(filepath, description):
     """檢查檔案是否存在"""
