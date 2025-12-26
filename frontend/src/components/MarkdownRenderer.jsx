@@ -124,10 +124,10 @@ export default function MarkdownRenderer({ content }) {
             const IconComponent = icon;
             
             return (
-              <div className="bg-slate-800/60 rounded-xl border border-slate-700/50 p-6 mb-8 mt-8 hover:border-primary-500/30 transition-all duration-300 shadow-lg">
+              <div className="bg-gradient-to-br from-slate-800/80 to-slate-700/60 rounded-xl border-2 border-slate-700/50 p-6 mb-8 mt-8 hover:border-primary-500/40 transition-all duration-300 shadow-xl backdrop-blur-sm">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="p-2.5 bg-primary-500/15 rounded-lg border border-primary-500/30 flex-shrink-0">
-                    <IconComponent size={20} className="text-primary-400" />
+                  <div className="p-2.5 bg-primary-500/20 rounded-lg border-2 border-primary-500/40 flex-shrink-0 shadow-md">
+                    <IconComponent size={20} className="text-primary-300" />
                   </div>
                   <h2 className="text-xl font-bold text-primary-300 m-0 text-center">
                     {children}
