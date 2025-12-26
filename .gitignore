@@ -25,3 +25,5 @@ frontend/.env.local
 # 歷史資料
 Historical Data/
 
+# 文檔建置（如果有的話）
+docs/_build/

@@ -43,15 +43,21 @@ def job_pipeline():
     categorized_articles = defaultdict(list)
     
     for news in raw_news_list:
-        # 呼叫 AI 分析獲取分類
-        analysis_result = analyze_article(news.get("content", ""))
+        # 呼叫 AI 分析獲取分類（傳入 metadata）
+        analysis_result = analyze_article(
+            text=news.get("content", ""),
+            title=news.get("title", ""),
+            source=news.get("source", ""),
+            published_at=news.get("published_at", "")
+        )
         
         if analysis_result:
             # 合併 AI 分析結果
             processed_news = {**news, **analysis_result}
             category = analysis_result.get('category', '未分類')
             categorized_articles[category].append(processed_news)
-            print(f"  - 已分類: {news['title'][:30]}... -> {category}")
+            confidence = analysis_result.get('confidence', 0.0)
+            print(f"  - 已分類: {news['title'][:30]}... -> {category} (信心度: {confidence:.2f})")
         else:
             print(f"  - 分析失敗跳過: {news['title'][:30]}...")
 
@@ -97,14 +103,19 @@ def job_pipeline():
         # 計算總文章數
         total_articles = sum(len(articles) for articles in categorized_articles.values())
         
-        # 準備分類摘要資料
+        # 準備分類摘要資料（使用優化版結構）
         category_summaries = []
         for cat_analysis in category_analyses:
             category_summaries.append({
                 'category': cat_analysis.get('category'),
                 'article_count': cat_analysis.get('article_count', 0),
-                'summary': cat_analysis.get('summary', ''),
-                'key_points': cat_analysis.get('key_points', [])
+                'executive_summary': cat_analysis.get('executive_summary', cat_analysis.get('summary', '')),
+                'storylines': cat_analysis.get('storylines', []),
+                'key_points': cat_analysis.get('key_points', []),
+                'risks': cat_analysis.get('risks', []),
+                'opportunities': cat_analysis.get('opportunities', []),
+                'signals_to_watch': cat_analysis.get('signals_to_watch', []),
+                'confidence': cat_analysis.get('confidence', 0.0)
             })
         
         db.collection('daily_news').document(today_str).set({
