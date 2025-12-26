@@ -169,26 +169,24 @@ export default function MarkdownRenderer({ content }) {
         
         console.log(`🎨 [MarkdownRenderer] 渲染區塊 ${index + 1}/${sections.length}: ${section.title}`);
         
-        // TL;DR 特殊樣式
+        // TL;DR 特殊樣式 - 使用直接 div 和明顯的樣式
         if (section.isTLDR) {
           return (
-            <Card
+            <div
               key={`section-${index}`}
-              className="mb-8"
-              padding="lg"
-              rounded="2xl"
-              border
-              shadow
+              className="bg-gradient-to-r from-primary-500/20 via-primary-600/15 to-primary-500/20 rounded-2xl border-2 border-primary-500/50 p-8 mb-6 shadow-xl"
+              style={{ 
+                backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                border: '2px solid rgba(59, 130, 246, 0.5)',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
+              }}
             >
               <div className="text-center mb-6">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <Icon 
-                    icon={Zap} 
-                    container 
-                    containerSize="md"
-                    color="primary"
-                  />
-                  <h2 className="text-2xl font-bold text-primary-300 m-0">
+                  <div className="p-3 bg-primary-500/30 rounded-xl border-2 border-primary-500/50">
+                    <Zap size={24} className="text-primary-200" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-primary-200 m-0">
                     {section.title}
                   </h2>
                 </div>
@@ -202,25 +200,27 @@ export default function MarkdownRenderer({ content }) {
                   {section.content}
                 </ReactMarkdown>
               </div>
-            </Card>
+            </div>
           );
         }
         
-        // 其他區塊的卡片樣式
+        // 其他區塊的卡片樣式 - 使用直接 div 和明顯的樣式
         return (
-          <Card
+          <div
             key={`section-${index}`}
-            className="mb-8"
-            padding="lg"
-            rounded="xl"
-            border
-            shadow
+            className="bg-gradient-to-br from-slate-800/95 via-slate-700/90 to-slate-800/95 rounded-xl border-2 border-slate-600/70 p-6 mb-6 shadow-2xl hover:border-primary-500/50 transition-all duration-300"
+            style={{ 
+              backgroundColor: 'rgba(30, 41, 59, 0.95)',
+              border: '2px solid rgba(100, 116, 139, 0.7)',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+              marginBottom: '1.5rem'
+            }}
           >
-            <div className="flex items-center justify-center gap-3 mb-6 pb-4 border-b border-slate-700/50">
-              <div className="p-2.5 bg-primary-500/20 rounded-lg border-2 border-primary-500/40 flex-shrink-0 shadow-md">
-                <IconComponent size={20} className="text-primary-300" />
+            <div className="flex items-center justify-center gap-3 mb-6 pb-4 border-b-2 border-slate-600/50">
+              <div className="p-3 bg-primary-500/25 rounded-lg border-2 border-primary-500/50 flex-shrink-0 shadow-lg">
+                <IconComponent size={22} className="text-primary-200" />
               </div>
-              <h2 className="text-xl font-bold text-primary-300 m-0 text-center">
+              <h2 className="text-xl font-bold text-primary-200 m-0 text-center">
                 {section.title}
               </h2>
             </div>
@@ -233,7 +233,7 @@ export default function MarkdownRenderer({ content }) {
                 {section.content}
               </ReactMarkdown>
             </div>
-          </Card>
+          </div>
         );
       })}
     </div>
