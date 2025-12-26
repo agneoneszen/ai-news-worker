@@ -19,6 +19,7 @@ COPY . .
 # 設置環境變數
 ENV PYTHONUNBUFFERED=1
 
-# 運行 scheduler
-CMD ["python", "scheduler.py"]
+# 運行長期排程器（適用於 Railway/Render）
+# 如需一次性執行，請使用: CMD ["python", "scheduler.py"]
+CMD ["python", "scheduler_continuous.py"]
 
