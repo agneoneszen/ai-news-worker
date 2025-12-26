@@ -22,9 +22,5 @@ console.log('  - App ID:', import.meta.env.VITE_FIREBASE_APP_ID ? '✅ 已設定
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-// 驗證連接
-db.enableNetwork().then(() => {
-  console.log('✅ [Firebase] Firestore 連接成功');
-}).catch((error) => {
-  console.error('❌ [Firebase] Firestore 連接失敗:', error);
-});
+// Firestore 會自動連接，不需要手動驗證
+console.log('✅ [Firebase] Firestore 已初始化');
