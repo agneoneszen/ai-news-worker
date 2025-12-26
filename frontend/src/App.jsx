@@ -33,7 +33,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-6">
             <div className="relative">
@@ -44,22 +44,22 @@ export default function App() {
             <p className="text-slate-500 text-sm">這可能需要幾秒鐘</p>
           </div>
         ) : error ? (
-          <div className="text-center py-24 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-3xl border border-red-500/30 backdrop-blur-sm">
+          <div className="text-center py-24 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-2xl border border-red-500/30 backdrop-blur-sm">
             <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-6" />
             <p className="text-red-300 font-semibold text-xl mb-3">讀取資料時發生錯誤</p>
             <p className="text-red-400 text-sm mb-6">{error}</p>
             <p className="text-slate-400 text-xs">請檢查 Firebase 配置和 Firestore 規則</p>
           </div>
         ) : news.length === 0 ? (
-          <div className="text-center py-24 bg-slate-800/30 rounded-3xl border border-dashed border-slate-700/50 backdrop-blur-sm">
+          <div className="text-center py-24 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700/50 backdrop-blur-sm">
             <FileText className="w-16 h-16 text-slate-500 mx-auto mb-6" />
             <p className="text-slate-300 text-lg font-medium mb-2">目前沒有新聞資料</p>
             <p className="text-slate-500 text-sm">請等待後端排程器執行，或檢查 Firestore 是否有資料</p>
           </div>
         ) : (
-          <div className="space-y-12">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-2">每日報告列表</h2>
+          <div className="space-y-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-white mb-1">每日報告</h2>
               <p className="text-slate-400 text-sm">共 {news.length} 篇報告，按日期排序（最新在前）</p>
             </div>
             {news.map((item) => (

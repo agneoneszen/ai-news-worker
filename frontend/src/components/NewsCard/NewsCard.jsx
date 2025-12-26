@@ -12,14 +12,7 @@ export default function NewsCard({ data }) {
   if (!data) return null;
 
   return (
-    <Card
-      className="mb-12 overflow-hidden"
-      hover
-      padding="none"
-      rounded="3xl"
-      border
-      shadow
-    >
+    <article className="bg-slate-800/40 rounded-xl border border-slate-700/50 overflow-hidden shadow-sm hover:shadow-md hover:border-slate-600/70 transition-all duration-200 mb-8">
       <NewsCardHeader 
         dateStr={data.date_str} 
         id={data.id}
@@ -36,7 +29,7 @@ export default function NewsCard({ data }) {
         categoryCount={data.category_count}
         categories={data.categories}
       />
-    </Card>
+    </article>
   );
 }
 

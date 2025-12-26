@@ -157,11 +157,11 @@ export default function MarkdownRenderer({ content }) {
     );
   }
 
-  // 渲染每個區塊為獨立卡片
+  // 渲染每個區塊為獨立卡片 - 參考 Medium/Reddit 設計
   console.log(`🎨 [MarkdownRenderer] 開始渲染 ${sections.length} 個卡片區塊`);
   
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto">
       {sections.map((section, index) => {
         const cleanTitle = section.title.replace(/[📊🌊🧭🔭📈🧱🔗]/g, '').trim();
         const icon = getIcon(cleanTitle);
@@ -169,29 +169,24 @@ export default function MarkdownRenderer({ content }) {
         
         console.log(`🎨 [MarkdownRenderer] 渲染區塊 ${index + 1}/${sections.length}: ${section.title}`);
         
-        // TL;DR 特殊樣式 - 使用直接 div 和明顯的樣式
+        // TL;DR 特殊樣式 - 突出顯示
         if (section.isTLDR) {
           return (
-            <div
+            <article
               key={`section-${index}`}
-              className="bg-gradient-to-r from-primary-500/20 via-primary-600/15 to-primary-500/20 rounded-2xl border-2 border-primary-500/50 p-8 mb-6 shadow-xl"
-              style={{ 
-                backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                border: '2px solid rgba(59, 130, 246, 0.5)',
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
-              }}
+              className="bg-gradient-to-br from-blue-500/10 via-blue-600/8 to-blue-500/10 rounded-2xl border border-blue-500/30 p-8 mb-8 shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              <div className="text-center mb-6">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="p-3 bg-primary-500/30 rounded-xl border-2 border-primary-500/50">
-                    <Zap size={24} className="text-primary-200" />
+              <header className="mb-6 pb-4 border-b border-blue-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-blue-500/20 rounded-lg">
+                    <Zap size={20} className="text-blue-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-primary-200 m-0">
+                  <h2 className="text-2xl font-bold text-blue-300 m-0">
                     {section.title}
                   </h2>
                 </div>
-              </div>
-              <div className="text-center">
+              </header>
+              <div className="prose prose-invert prose-blue max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={getMarkdownComponents()}
@@ -200,31 +195,27 @@ export default function MarkdownRenderer({ content }) {
                   {section.content}
                 </ReactMarkdown>
               </div>
-            </div>
+            </article>
           );
         }
         
-        // 其他區塊的卡片樣式 - 使用直接 div 和明顯的樣式
+        // 其他區塊的卡片樣式 - 參考 Medium 卡片設計
         return (
-          <div
+          <article
             key={`section-${index}`}
-            className="bg-gradient-to-br from-slate-800/95 via-slate-700/90 to-slate-800/95 rounded-xl border-2 border-slate-600/70 p-6 mb-6 shadow-2xl hover:border-primary-500/50 transition-all duration-300"
-            style={{ 
-              backgroundColor: 'rgba(30, 41, 59, 0.95)',
-              border: '2px solid rgba(100, 116, 139, 0.7)',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-              marginBottom: '1.5rem'
-            }}
+            className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-6 mb-6 shadow-sm hover:shadow-md hover:border-slate-600/70 transition-all duration-200 backdrop-blur-sm"
           >
-            <div className="flex items-center justify-center gap-3 mb-6 pb-4 border-b-2 border-slate-600/50">
-              <div className="p-3 bg-primary-500/25 rounded-lg border-2 border-primary-500/50 flex-shrink-0 shadow-lg">
-                <IconComponent size={22} className="text-primary-200" />
+            <header className="mb-5 pb-4 border-b border-slate-700/50">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-slate-700/50 rounded-lg">
+                  <IconComponent size={18} className="text-blue-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-slate-100 m-0">
+                  {section.title}
+                </h2>
               </div>
-              <h2 className="text-xl font-bold text-primary-200 m-0 text-center">
-                {section.title}
-              </h2>
-            </div>
-            <div>
+            </header>
+            <div className="prose prose-invert prose-slate max-w-none">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={getMarkdownComponents()}
@@ -233,46 +224,46 @@ export default function MarkdownRenderer({ content }) {
                 {section.content}
               </ReactMarkdown>
             </div>
-          </div>
+          </article>
         );
       })}
     </div>
   );
 }
 
-// Markdown 組件配置（提取為函數以便復用）
+// Markdown 組件配置（提取為函數以便復用）- 參考現代資訊網站設計
 function getMarkdownComponents() {
   return {
-    // H3 樣式 - 子標題（置中）
+    // H3 樣式 - 子標題（左對齊，參考 Medium）
     h3: ({node, children, ...props}) => (
-      <h3 className="text-lg font-semibold text-primary-200 mt-6 mb-4 flex items-center justify-center gap-2">
-        <div className="w-1.5 h-1.5 bg-primary-400 rounded-full"></div>
-        {children}
+      <h3 className="text-lg font-semibold text-slate-100 mt-8 mb-4 flex items-center gap-2">
+        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0"></div>
+        <span>{children}</span>
       </h3>
     ),
     
-    // 段落樣式 - 置中排版
+    // 段落樣式 - 左對齊，優化行高和間距（參考 Medium）
     p: ({node, children, ...props}) => (
-      <p className="text-text-secondary leading-relaxed mb-5 text-base text-center max-w-3xl mx-auto">
+      <p className="text-slate-300 leading-7 mb-4 text-base text-left">
         {children}
       </p>
     ),
     
-    // 連結樣式
+    // 連結樣式 - 參考 Medium/Reddit
     a: ({node, href, children, ...props}) => (
       <a 
         {...props} 
         href={href}
         target="_blank" 
         rel="noopener noreferrer" 
-        className="inline-flex items-center gap-1.5 text-semantic-info-light hover:text-semantic-info-main transition-colors font-medium underline decoration-semantic-info-main/50 underline-offset-2 hover:decoration-semantic-info-main focus:outline-none focus:ring-2 focus:ring-semantic-info-main focus:ring-offset-2 focus:ring-offset-slate-900 rounded"
+        className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 transition-colors font-medium underline decoration-blue-500/50 underline-offset-2 hover:decoration-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-800 rounded"
       >
         {children}
-        <ExternalLink size={14} className="inline" />
+        <ExternalLink size={12} className="inline opacity-70" />
       </a>
     ),
     
-    // 無序列表 - 置中排版
+    // 無序列表 - 左對齊，優化間距（參考 Medium）
     ul: ({node, children, ...props}) => {
       const childrenArray = React.Children.toArray(children);
       const isChecklist = childrenArray.some(child => 
@@ -284,20 +275,20 @@ function getMarkdownComponents() {
       
       if (isChecklist) {
         return (
-          <ul className="space-y-3 my-5 mx-auto max-w-2xl list-none">
+          <ul className="space-y-2.5 my-4 list-none pl-0">
             {children}
           </ul>
         );
       }
       
       return (
-        <ul className="space-y-3 my-5 mx-auto max-w-3xl list-disc marker:text-primary-500">
+        <ul className="space-y-2 my-4 list-disc pl-6 marker:text-blue-400">
           {children}
         </ul>
       );
     },
     
-    // 列表項 - 支持 checkbox
+    // 列表項 - 支持 checkbox，左對齊
     li: ({node, children, ...props}) => {
       const childrenArray = React.Children.toArray(children);
       
@@ -306,58 +297,58 @@ function getMarkdownComponents() {
         const firstChild = childrenArray[0];
         if (React.isValidElement(firstChild) && firstChild.type === 'input' && firstChild.props.type === 'checkbox') {
           return (
-            <li className="text-text-secondary my-2 pl-2 leading-relaxed flex items-start gap-2 list-none">
+            <li className="text-slate-300 my-2 leading-6 flex items-start gap-3 list-none">
               <input 
                 type="checkbox" 
                 checked={firstChild.props.checked || false}
                 readOnly
-                className="mt-1.5 w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500 cursor-default"
+                className="mt-0.5 w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-500 focus:ring-blue-500 cursor-default flex-shrink-0"
               />
-              <span>{childrenArray.slice(1)}</span>
+              <span className="flex-1">{childrenArray.slice(1)}</span>
             </li>
           );
         }
       }
       
       return (
-        <li className="text-text-secondary my-2 pl-2 leading-relaxed text-center">
+        <li className="text-slate-300 my-2 leading-6 text-left">
           {children}
         </li>
       );
     },
     
-    // 有序列表
+    // 有序列表 - 左對齊
     ol: ({node, children, ...props}) => (
-      <ol className="space-y-3 my-5 mx-auto max-w-3xl list-decimal marker:text-primary-500">
+      <ol className="space-y-2 my-4 list-decimal pl-6 marker:text-blue-400">
         {children}
       </ol>
     ),
     
-    // 強調
+    // 強調 - 參考 Medium
     strong: ({node, children, ...props}) => (
-      <strong className="text-primary-200 font-bold">
+      <strong className="text-slate-100 font-semibold">
         {children}
       </strong>
     ),
     
-    // 引用
+    // 引用 - 參考 Medium 引用樣式
     blockquote: ({node, children, ...props}) => (
-      <blockquote className="border-l-4 border-primary-500/50 pl-4 italic text-text-tertiary my-5 bg-slate-800/30 py-3 rounded-r-lg max-w-3xl mx-auto">
+      <blockquote className="border-l-4 border-blue-500/50 pl-4 italic text-slate-400 my-6 bg-slate-800/30 py-3 rounded-r-lg">
         {children}
       </blockquote>
     ),
     
-    // 代碼
+    // 代碼 - 優化樣式
     code: ({node, inline, children, ...props}) => {
       if (inline) {
         return (
-          <code className="text-primary-300 bg-slate-800/70 px-1.5 py-0.5 rounded text-sm font-mono border border-slate-700/50">
+          <code className="text-blue-300 bg-slate-800/80 px-1.5 py-0.5 rounded text-sm font-mono border border-slate-700/50">
             {children}
           </code>
         );
       }
       return (
-        <code className="block text-primary-300 bg-slate-900 border border-slate-700 rounded-lg p-4 text-sm font-mono overflow-x-auto my-4 max-w-3xl mx-auto">
+        <code className="block text-slate-200 bg-slate-900 border border-slate-700 rounded-lg p-4 text-sm font-mono overflow-x-auto my-4">
           {children}
         </code>
       );

@@ -9,9 +9,10 @@
   }
 }
 
-/* Markdown 內容樣式 */
+/* Markdown 內容樣式 - 參考 Medium 設計 */
 .markdown-content {
   @apply text-slate-300;
+  line-height: 1.75;
 }
 
 .markdown-content > *:first-child {
@@ -20,6 +21,22 @@
 
 .markdown-content > *:last-child {
   @apply mb-0;
+}
+
+/* 優化段落間距 */
+.markdown-content p + p {
+  @apply mt-4;
+}
+
+/* 優化標題間距 */
+.markdown-content h3 + p {
+  @apply mt-2;
+}
+
+/* 優化列表間距 */
+.markdown-content ul + p,
+.markdown-content ol + p {
+  @apply mt-4;
 }
 
 /* 平滑滾動 */
