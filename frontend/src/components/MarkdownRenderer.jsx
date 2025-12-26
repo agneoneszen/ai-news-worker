@@ -161,7 +161,7 @@ export default function MarkdownRenderer({ content }) {
   console.log(`🎨 [MarkdownRenderer] 開始渲染 ${sections.length} 個卡片區塊`);
   
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-4xl mx-auto">
       {sections.map((section, index) => {
         const cleanTitle = section.title.replace(/[📊🌊🧭🔭📈🧱🔗]/g, '').trim();
         const icon = getIcon(cleanTitle);
@@ -174,14 +174,18 @@ export default function MarkdownRenderer({ content }) {
           return (
             <article
               key={`section-${index}`}
-              className="bg-gradient-to-br from-blue-500/10 via-blue-600/8 to-blue-500/10 rounded-2xl border border-blue-500/30 p-8 mb-8 shadow-lg hover:shadow-xl transition-all duration-200"
+              className="bg-gradient-to-br from-blue-500/15 via-blue-600/12 to-blue-500/15 rounded-2xl border-2 border-blue-500/40 p-8 mb-8 shadow-xl hover:shadow-2xl hover:border-blue-500/60 transition-all duration-200"
+              style={{
+                backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                borderColor: 'rgba(59, 130, 246, 0.4)',
+              }}
             >
-              <header className="mb-6 pb-4 border-b border-blue-500/20">
+              <header className="mb-6 pb-4 border-b border-blue-500/30">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-blue-500/20 rounded-lg">
-                    <Zap size={20} className="text-blue-400" />
+                  <div className="p-2.5 bg-blue-500/25 rounded-lg border border-blue-500/40">
+                    <Zap size={20} className="text-blue-300" />
                   </div>
-                  <h2 className="text-2xl font-bold text-blue-300 m-0">
+                  <h2 className="text-2xl font-bold text-blue-200 m-0">
                     {section.title}
                   </h2>
                 </div>
@@ -199,15 +203,19 @@ export default function MarkdownRenderer({ content }) {
           );
         }
         
-        // 其他區塊的卡片樣式 - 參考 Medium 卡片設計
+        // 其他區塊的卡片樣式 - 增強視覺效果
         return (
           <article
             key={`section-${index}`}
-            className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-6 mb-6 shadow-sm hover:shadow-md hover:border-slate-600/70 transition-all duration-200 backdrop-blur-sm"
+            className="bg-slate-800/80 rounded-xl border-2 border-slate-700/70 p-6 mb-6 shadow-lg hover:shadow-xl hover:border-slate-600/90 transition-all duration-200"
+            style={{
+              backgroundColor: 'rgba(30, 41, 59, 0.85)',
+              borderColor: 'rgba(100, 116, 139, 0.7)',
+            }}
           >
-            <header className="mb-5 pb-4 border-b border-slate-700/50">
+            <header className="mb-5 pb-4 border-b border-slate-700/60">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-slate-700/50 rounded-lg">
+                <div className="p-2 bg-slate-700/60 rounded-lg border border-slate-600/50">
                   <IconComponent size={18} className="text-blue-400" />
                 </div>
                 <h2 className="text-xl font-semibold text-slate-100 m-0">
