@@ -17,22 +17,30 @@ import Icon from './ui/Icon';
  * 將 Markdown 內容渲染為美觀的 UI
  */
 export default function MarkdownRenderer({ content }) {
-  // 圖示映射
+  // 圖示映射 - 擴展匹配邏輯
   const iconMapping = {
     '市場情緒': BarChart3,
     '儀表板': BarChart3,
+    '情緒': BarChart3,
     '趨勢': Waves,
     '核心': Waves,
+    '核心趨勢': Waves,
     '決策': Compass,
     '指引': Compass,
+    '決策指引': Compass,
     '監測': Search,
     '清單': Search,
+    '監測清單': Search,
+    '今日監測': Search,
     '分類': FileText,
     '摘要': FileText,
+    '分類摘要': FileText,
     '不確定': AlertTriangle,
     '反方': AlertTriangle,
+    '不確定性': AlertTriangle,
     '來源': ExternalLink,
     '資訊': ExternalLink,
+    '資訊來源': ExternalLink,
   };
 
   // 獲取對應的圖示
@@ -83,7 +91,8 @@ export default function MarkdownRenderer({ content }) {
           
           // H2 樣式 - 卡片式區塊標題
           h2: ({node, children, ...props}) => {
-            const content = String(children);
+            // 處理可能包含 emoji 的標題
+            const content = String(children).replace(/[📊🌊🧭🔭📈🧱🔗]/g, '').trim();
             const icon = getIcon(content);
             const IconComponent = icon;
             
@@ -137,12 +146,33 @@ export default function MarkdownRenderer({ content }) {
             </ul>
           ),
           
-          // 列表項
-          li: ({node, children, ...props}) => (
-            <li className="text-text-secondary my-2 pl-2 leading-relaxed">
-              {children}
-            </li>
-          ),
+          // 列表項 - 支持 checkbox
+          li: ({node, children, ...props}) => {
+            const content = String(children);
+            const isCheckbox = content.startsWith('[ ]') || content.startsWith('[x]') || content.startsWith('[X]');
+            
+            if (isCheckbox) {
+              const isChecked = content.startsWith('[x]') || content.startsWith('[X]');
+              const text = content.replace(/^\[[xX ]\]\s*/, '');
+              return (
+                <li className="text-text-secondary my-2 pl-2 leading-relaxed flex items-start gap-2">
+                  <input 
+                    type="checkbox" 
+                    checked={isChecked}
+                    readOnly
+                    className="mt-1.5 w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500"
+                  />
+                  <span>{text}</span>
+                </li>
+              );
+            }
+            
+            return (
+              <li className="text-text-secondary my-2 pl-2 leading-relaxed">
+                {children}
+              </li>
+            );
+          },
           
           // 有序列表
           ol: ({node, children, ...props}) => (
