@@ -71,6 +71,16 @@ html {
 }
 
 body {
-  background-color: #0f1115; /* 強制深色背景 */
-  color: #e2e8f0;
+  background-color: #f8fafc; /* 淺色背景，參考圖片設計 */
+  color: #1e293b;
+}
+
+/* 隱藏滾動條但保持滾動功能 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

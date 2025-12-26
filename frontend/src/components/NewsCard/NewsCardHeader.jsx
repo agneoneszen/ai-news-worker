@@ -60,12 +60,12 @@ export default function NewsCardHeader({ dateStr, id, createdAt, compact = false
   };
 
   if (compact) {
-    // 緊湊模式（列表預覽）
+    // 緊湊模式（列表預覽）- 參考圖片設計
     return (
       <div className="flex items-center gap-3 mb-3">
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-          <Calendar size={14} className="text-blue-400" />
-          <span className="text-sm font-semibold text-blue-300">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg">
+          <Calendar size={14} className="text-blue-500" />
+          <span className="text-sm font-semibold text-blue-700">
             {formatDate(dateStr || id)}
           </span>
         </div>
@@ -74,27 +74,27 @@ export default function NewsCardHeader({ dateStr, id, createdAt, compact = false
             {formatTimestamp(createdAt)}
           </span>
         )}
-        <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded">
-          <Zap size={12} className="text-blue-400" />
-          <span className="text-xs text-blue-400 font-medium">AI</span>
+        <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 border border-blue-200 rounded">
+          <Zap size={12} className="text-blue-500" />
+          <span className="text-xs text-blue-600 font-medium">AI</span>
         </div>
       </div>
     );
   }
 
-  // 完整模式（展開後）
+  // 完整模式（展開後）- 參考圖片設計
   return (
-    <header className="px-6 py-4 border-b border-slate-700/50">
+    <header className="px-4 py-3 border-b border-slate-200 bg-slate-50">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-slate-700/50 rounded-lg">
-            <Calendar size={18} className="text-blue-400" />
+          <div className="p-2 bg-blue-50 rounded-lg border border-blue-200">
+            <Calendar size={18} className="text-blue-500" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 uppercase tracking-wide block font-medium mb-0.5">
+            <span className="text-xs text-slate-500 uppercase tracking-wide block font-medium mb-0.5">
               每日報告
             </span>
-            <span className="text-slate-100 font-semibold text-xl block">
+            <span className="text-slate-900 font-semibold text-lg block">
               {formatDate(dateStr || id)}
             </span>
             {createdAt && (
@@ -105,9 +105,9 @@ export default function NewsCardHeader({ dateStr, id, createdAt, compact = false
           </div>
         </div>
         
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-          <Zap size={14} className="text-blue-400" />
-          <span className="text-xs text-blue-400 font-medium">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg">
+          <Zap size={14} className="text-blue-500" />
+          <span className="text-xs text-blue-600 font-medium">
             AI
           </span>
         </div>

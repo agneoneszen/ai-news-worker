@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useNewsData } from './hooks/useNewsData'; // ✨ 確保這裡有加花括號
+import { useState, useEffect, useMemo } from 'react';
+import { useNewsData } from './hooks/useNewsData';
 import NewsCard from './components/NewsCard/NewsCard';
-import { Loader2, AlertCircle, FileText } from 'lucide-react';
-import VersionInfo from './components/VersionInfo';
+import { Loader2, AlertCircle, FileText, ArrowLeft, Users, MoreVertical, Plus } from 'lucide-react';
+import DateSelector from './components/DateSelector';
+import SearchBar from './components/SearchBar';
+import BottomNav from './components/BottomNav';
 
 export default function App() {
   const { news, loading, error } = useNewsData();
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('reports');
   
   // 調試：檢查 Firebase 配置
   useEffect(() => {
@@ -14,80 +19,144 @@ export default function App() {
     console.log('  - VITE_FIREBASE_PROJECT_ID:', import.meta.env.VITE_FIREBASE_PROJECT_ID || '未設定');
   }, []);
 
+  // 獲取所有日期並排序
+  const availableDates = useMemo(() => {
+    const dates = news.map(item => item.date_str || item.id).filter(Boolean);
+    return [...new Set(dates)].sort().reverse(); // 降序，最新的在前
+  }, [news]);
+
+  // 獲取日期範圍
+  const dateRange = useMemo(() => {
+    if (availableDates.length === 0) return null;
+    const sorted = [...availableDates].sort();
+    return `${sorted[0]} - ${sorted[sorted.length - 1]}`;
+  }, [availableDates]);
+
+  // 過濾報告（根據選中的日期和搜索詞）
+  const filteredNews = useMemo(() => {
+    let filtered = news;
+    
+    // 按日期過濾
+    if (selectedDate) {
+      filtered = filtered.filter(item => (item.date_str || item.id) === selectedDate);
+    }
+    
+    // 按搜索詞過濾
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(item => 
+        item.content?.toLowerCase().includes(term) ||
+        item.date_str?.toLowerCase().includes(term) ||
+        item.categories?.some(cat => cat.toLowerCase().includes(term))
+      );
+    }
+    
+    return filtered;
+  }, [news, selectedDate, searchTerm]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 font-sans">
-      <header className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-10 shadow-lg">
-        <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/30">
-              AI
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-20">
+      {/* 頂部導航欄 - 參考圖片設計 */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-3">
+          {/* 第一行：標題和操作 */}
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
+                <ArrowLeft size={20} className="text-slate-700" />
+              </button>
+              <div>
+                <h1 className="text-lg font-semibold text-slate-900">Daily Insight</h1>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-xs text-slate-500">連線</span>
+                  {dateRange && (
+                    <>
+                      <span className="text-xs text-slate-400">•</span>
+                      <span className="text-xs text-slate-500">{dateRange}</span>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-white">Daily Insight</h1>
-              <p className="text-xs text-slate-400">AI-Powered News Intelligence</p>
+            <div className="flex items-center gap-2">
+              <div className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded">
+                v1.0.0
+              </div>
+              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                <Users size={18} className="text-slate-700" />
+              </button>
+              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                <MoreVertical size={18} className="text-slate-700" />
+              </button>
             </div>
           </div>
-          <div className="text-xs text-slate-300 bg-slate-800/50 border border-slate-700/50 px-4 py-1.5 rounded-full font-medium">
-            Beta v1.0
+          
+          {/* 搜索欄 */}
+          <div className="mb-3">
+            <SearchBar 
+              onSearch={setSearchTerm}
+              placeholder="Q 搜尋報告內容..."
+            />
           </div>
+          
+          {/* 日期選擇器 */}
+          {availableDates.length > 0 && (
+            <DateSelector
+              dates={availableDates}
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              onDateDeselect={() => setSelectedDate(null)}
+            />
+          )}
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <main className="max-w-4xl mx-auto px-4 py-4">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-6">
             <div className="relative">
-              <Loader2 className="w-16 h-16 animate-spin text-blue-400" />
-              <div className="absolute inset-0 w-16 h-16 border-4 border-blue-500/20 rounded-full"></div>
+              <Loader2 className="w-16 h-16 animate-spin text-blue-500" />
+              <div className="absolute inset-0 w-16 h-16 border-4 border-blue-200 rounded-full"></div>
             </div>
-            <p className="text-slate-300 text-lg font-medium">正在同步最新的 AI 分析報告...</p>
+            <p className="text-slate-700 text-lg font-medium">正在同步最新的 AI 分析報告...</p>
             <p className="text-slate-500 text-sm">這可能需要幾秒鐘</p>
           </div>
         ) : error ? (
-          <div className="text-center py-24 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-2xl border border-red-500/30 backdrop-blur-sm">
-            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-6" />
-            <p className="text-red-300 font-semibold text-xl mb-3">讀取資料時發生錯誤</p>
-            <p className="text-red-400 text-sm mb-6">{error}</p>
-            <p className="text-slate-400 text-xs">請檢查 Firebase 配置和 Firestore 規則</p>
+          <div className="text-center py-24 bg-red-50 rounded-2xl border border-red-200">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6" />
+            <p className="text-red-700 font-semibold text-xl mb-3">讀取資料時發生錯誤</p>
+            <p className="text-red-600 text-sm mb-6">{error}</p>
+            <p className="text-slate-500 text-xs">請檢查 Firebase 配置和 Firestore 規則</p>
           </div>
-        ) : news.length === 0 ? (
-          <div className="text-center py-24 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700/50 backdrop-blur-sm">
-            <FileText className="w-16 h-16 text-slate-500 mx-auto mb-6" />
-            <p className="text-slate-300 text-lg font-medium mb-2">目前沒有新聞資料</p>
-            <p className="text-slate-500 text-sm">請等待後端排程器執行，或檢查 Firestore 是否有資料</p>
+        ) : filteredNews.length === 0 ? (
+          <div className="text-center py-24 bg-slate-100 rounded-2xl border border-dashed border-slate-300">
+            <FileText className="w-16 h-16 text-slate-400 mx-auto mb-6" />
+            <p className="text-slate-700 text-lg font-medium mb-2">
+              {searchTerm || selectedDate ? '沒有找到符合條件的報告' : '目前沒有新聞資料'}
+            </p>
+            <p className="text-slate-500 text-sm">
+              {searchTerm || selectedDate 
+                ? '請嘗試調整搜索條件或選擇其他日期' 
+                : '請等待後端排程器執行，或檢查 Firestore 是否有資料'}
+            </p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {/* 頁面標題和統計 */}
-            <div className="mb-6 pb-4 border-b border-slate-700/50">
-              <h2 className="text-2xl font-bold text-white mb-2">每日報告</h2>
-              <div className="flex items-center gap-4 text-sm text-slate-400">
-                <span>共 {news.length} 篇報告</span>
-                <span>•</span>
-                <span>按日期排序（最新在前）</span>
-              </div>
-            </div>
-            
-            {/* 報告列表 */}
-            <div className="space-y-4">
-              {news.map((item) => (
-                <NewsCard key={item.id} data={item} />
-              ))}
-            </div>
+          <div className="space-y-4">
+            {filteredNews.map((item) => (
+              <NewsCard key={item.id} data={item} />
+            ))}
           </div>
         )}
       </main>
 
-      <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur-sm py-10 mt-16 text-center">
-        <p className="text-slate-400 text-sm">
-          © 2025 AI News Aggregator. Powered by OpenAI & Firebase.
-        </p>
-        <p className="text-slate-500 text-xs mt-2">
-          Daily automated news analysis and intelligence reports
-        </p>
-      </footer>
-      
-      <VersionInfo />
+      {/* 浮動操作按鈕 */}
+      <button className="fixed bottom-24 right-4 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center z-40">
+        <Plus size={24} />
+      </button>
+
+      {/* 底部導航欄 */}
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
 }

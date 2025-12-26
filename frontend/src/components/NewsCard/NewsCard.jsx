@@ -40,10 +40,10 @@ export default function NewsCard({ data }) {
   const summary = getSummary();
 
   return (
-    <article className="bg-slate-800/60 rounded-xl border border-slate-700/60 overflow-hidden shadow-md hover:shadow-lg hover:border-slate-600/80 transition-all duration-200">
+    <article className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
       {/* 預覽頭部 - 可點擊展開 */}
       <div 
-        className={`p-5 cursor-pointer hover:bg-slate-800/80 transition-colors ${isExpanded ? 'border-b border-slate-700/50' : ''}`}
+        className={`p-4 cursor-pointer hover:bg-slate-50 transition-colors ${isExpanded ? 'border-b border-slate-200' : ''}`}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-start justify-between gap-4">
@@ -57,9 +57,9 @@ export default function NewsCard({ data }) {
             
             {/* 摘要預覽（未展開時顯示） */}
             {!isExpanded && summary && (
-              <div className="mt-4 space-y-2">
+              <div className="mt-3 space-y-2">
                 {summary.map((point, i) => (
-                  <p key={i} className="text-slate-300 text-sm leading-6 line-clamp-2">
+                  <p key={i} className="text-slate-600 text-sm leading-6 line-clamp-2">
                     {point}
                   </p>
                 ))}
@@ -81,16 +81,16 @@ export default function NewsCard({ data }) {
           
           {/* 展開/摺疊按鈕 */}
           <button
-            className="flex-shrink-0 p-2 hover:bg-slate-700/50 rounded-lg transition-colors"
+            className="flex-shrink-0 p-2 hover:bg-slate-100 rounded-lg transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
           >
             {isExpanded ? (
-              <ChevronUp size={20} className="text-slate-400" />
+              <ChevronUp size={20} className="text-slate-500" />
             ) : (
-              <ChevronDown size={20} className="text-slate-400" />
+              <ChevronDown size={20} className="text-slate-500" />
             )}
           </button>
         </div>
@@ -98,7 +98,7 @@ export default function NewsCard({ data }) {
       
       {/* 展開的詳細內容 */}
       {isExpanded && (
-        <div className="border-t border-slate-700/50 bg-slate-800/40">
+        <div className="border-t border-slate-200 bg-slate-50">
           <NewsCardContent 
             content={data.content}
             data={data}

@@ -169,23 +169,19 @@ export default function MarkdownRenderer({ content }) {
         
         console.log(`🎨 [MarkdownRenderer] 渲染區塊 ${index + 1}/${sections.length}: ${section.title}`);
         
-        // TL;DR 特殊樣式 - 突出顯示
+        // TL;DR 特殊樣式 - 參考圖片設計（淺色背景）
         if (section.isTLDR) {
           return (
             <article
               key={`section-${index}`}
-              className="bg-gradient-to-br from-blue-500/15 via-blue-600/12 to-blue-500/15 rounded-2xl border-2 border-blue-500/40 p-8 mb-8 shadow-xl hover:shadow-2xl hover:border-blue-500/60 transition-all duration-200"
-              style={{
-                backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                borderColor: 'rgba(59, 130, 246, 0.4)',
-              }}
+              className="bg-blue-50 rounded-lg border-2 border-blue-200 p-6 mb-6 shadow-sm hover:shadow-md transition-all duration-200"
             >
-              <header className="mb-6 pb-4 border-b border-blue-500/30">
+              <header className="mb-4 pb-3 border-b border-blue-200">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-blue-500/25 rounded-lg border border-blue-500/40">
-                    <Zap size={20} className="text-blue-300" />
+                  <div className="p-2 bg-blue-100 rounded-lg border border-blue-200">
+                    <Zap size={18} className="text-blue-600" />
                   </div>
-                  <h2 className="text-2xl font-bold text-blue-200 m-0">
+                  <h2 className="text-xl font-bold text-blue-900 m-0">
                     {section.title}
                   </h2>
                 </div>
@@ -203,22 +199,18 @@ export default function MarkdownRenderer({ content }) {
           );
         }
         
-        // 其他區塊的卡片樣式 - 增強視覺效果
+        // 其他區塊的卡片樣式 - 參考圖片設計（白色背景）
         return (
           <article
             key={`section-${index}`}
-            className="bg-slate-800/80 rounded-xl border-2 border-slate-700/70 p-6 mb-6 shadow-lg hover:shadow-xl hover:border-slate-600/90 transition-all duration-200"
-            style={{
-              backgroundColor: 'rgba(30, 41, 59, 0.85)',
-              borderColor: 'rgba(100, 116, 139, 0.7)',
-            }}
+            className="bg-white rounded-lg border border-slate-200 p-5 mb-4 shadow-sm hover:shadow-md transition-all duration-200"
           >
-            <header className="mb-5 pb-4 border-b border-slate-700/60">
+            <header className="mb-4 pb-3 border-b border-slate-200">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-slate-700/60 rounded-lg border border-slate-600/50">
-                  <IconComponent size={18} className="text-blue-400" />
+                <div className="p-2 bg-blue-50 rounded-lg border border-blue-200">
+                  <IconComponent size={18} className="text-blue-500" />
                 </div>
-                <h2 className="text-xl font-semibold text-slate-100 m-0">
+                <h2 className="text-lg font-semibold text-slate-900 m-0">
                   {section.title}
                 </h2>
               </div>
@@ -257,14 +249,14 @@ function getMarkdownComponents() {
       </p>
     ),
     
-    // 連結樣式 - 參考 Medium/Reddit
+    // 連結樣式 - 參考圖片設計
     a: ({node, href, children, ...props}) => (
       <a 
         {...props} 
         href={href}
         target="_blank" 
         rel="noopener noreferrer" 
-        className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 transition-colors font-medium underline decoration-blue-500/50 underline-offset-2 hover:decoration-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-800 rounded"
+        className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors font-medium underline decoration-blue-300 underline-offset-2 hover:decoration-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
       >
         {children}
         <ExternalLink size={12} className="inline opacity-70" />
@@ -290,13 +282,13 @@ function getMarkdownComponents() {
       }
       
       return (
-        <ul className="space-y-2 my-4 list-disc pl-6 marker:text-blue-400">
+        <ul className="space-y-2 my-3 list-disc pl-5 marker:text-blue-500">
           {children}
         </ul>
       );
     },
     
-    // 列表項 - 支持 checkbox，左對齊
+    // 列表項 - 支持 checkbox，左對齊（參考圖片設計）
     li: ({node, children, ...props}) => {
       const childrenArray = React.Children.toArray(children);
       
@@ -305,12 +297,12 @@ function getMarkdownComponents() {
         const firstChild = childrenArray[0];
         if (React.isValidElement(firstChild) && firstChild.type === 'input' && firstChild.props.type === 'checkbox') {
           return (
-            <li className="text-slate-300 my-2 leading-6 flex items-start gap-3 list-none">
+            <li className="text-slate-700 my-1.5 leading-6 flex items-start gap-3 list-none">
               <input 
                 type="checkbox" 
                 checked={firstChild.props.checked || false}
                 readOnly
-                className="mt-0.5 w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-500 focus:ring-blue-500 cursor-default flex-shrink-0"
+                className="mt-0.5 w-4 h-4 rounded border-slate-300 bg-white text-blue-500 focus:ring-blue-500 cursor-default flex-shrink-0"
               />
               <span className="flex-1">{childrenArray.slice(1)}</span>
             </li>
@@ -319,44 +311,44 @@ function getMarkdownComponents() {
       }
       
       return (
-        <li className="text-slate-300 my-2 leading-6 text-left">
+        <li className="text-slate-700 my-1.5 leading-6 text-left">
           {children}
         </li>
       );
     },
     
-    // 有序列表 - 左對齊
+    // 有序列表 - 左對齊（參考圖片設計）
     ol: ({node, children, ...props}) => (
-      <ol className="space-y-2 my-4 list-decimal pl-6 marker:text-blue-400">
+      <ol className="space-y-2 my-3 list-decimal pl-5 marker:text-blue-500">
         {children}
       </ol>
     ),
     
-    // 強調 - 參考 Medium
+    // 強調 - 參考圖片設計
     strong: ({node, children, ...props}) => (
-      <strong className="text-slate-100 font-semibold">
+      <strong className="text-slate-900 font-semibold">
         {children}
       </strong>
     ),
     
-    // 引用 - 參考 Medium 引用樣式
+    // 引用 - 參考圖片設計
     blockquote: ({node, children, ...props}) => (
-      <blockquote className="border-l-4 border-blue-500/50 pl-4 italic text-slate-400 my-6 bg-slate-800/30 py-3 rounded-r-lg">
+      <blockquote className="border-l-4 border-blue-300 pl-4 italic text-slate-600 my-4 bg-blue-50 py-3 rounded-r-lg">
         {children}
       </blockquote>
     ),
     
-    // 代碼 - 優化樣式
+    // 代碼 - 參考圖片設計
     code: ({node, inline, children, ...props}) => {
       if (inline) {
         return (
-          <code className="text-blue-300 bg-slate-800/80 px-1.5 py-0.5 rounded text-sm font-mono border border-slate-700/50">
+          <code className="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-sm font-mono border border-blue-200">
             {children}
           </code>
         );
       }
       return (
-        <code className="block text-slate-200 bg-slate-900 border border-slate-700 rounded-lg p-4 text-sm font-mono overflow-x-auto my-4">
+        <code className="block text-slate-800 bg-slate-100 border border-slate-200 rounded-lg p-4 text-sm font-mono overflow-x-auto my-4">
           {children}
         </code>
       );
