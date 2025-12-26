@@ -13,7 +13,25 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(__file__))
 
 from scheduler import job_pipeline
-from check_setup import check_environment
+import os
+from dotenv import load_dotenv
+
+# 載入環境變數
+load_dotenv()
+
+def check_environment():
+    """檢查環境設定"""
+    errors = []
+    
+    # 檢查 OpenAI API Key
+    if not os.getenv("OPENAI_API_KEY"):
+        errors.append("OPENAI_API_KEY 未設定")
+    
+    # 檢查 Firebase 服務帳號
+    if not os.path.exists("serviceAccountKey.json"):
+        errors.append("serviceAccountKey.json 不存在")
+    
+    return len(errors) == 0, errors
 
 def main():
     print("=" * 60)
@@ -23,9 +41,13 @@ def main():
     
     # 1. 檢查環境
     print("📋 [1/4] 檢查環境設定...")
-    env_ok = check_environment()
+    env_ok, errors = check_environment()
     if not env_ok:
         print("❌ 環境檢查失敗，請先設定環境變數")
+        print()
+        print("發現的問題：")
+        for error in errors:
+            print(f"  - {error}")
         print()
         print("請確認：")
         print("1. backend/.env 檔案存在且包含 OPENAI_API_KEY")
