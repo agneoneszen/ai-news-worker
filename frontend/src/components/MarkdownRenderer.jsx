@@ -83,7 +83,13 @@ export default function MarkdownRenderer({ content }) {
       const line = lines[i];
       
       // 檢查是否為 H2 標題（## 開頭，可能前面有空格）
-      if (line.trim().startsWith('## ')) {
+      // 支持多種格式：## 標題、##📊 標題、##  📊 標題
+      const trimmedLine = line.trim();
+      const isH2 = trimmedLine.startsWith('## ') || 
+                   trimmedLine.match(/^##\s*[📊🌊🧭🔭📈🧱🔗]/) ||
+                   (trimmedLine.startsWith('##') && trimmedLine.length > 2 && !trimmedLine.startsWith('###'));
+      
+      if (isH2) {
         // 保存上一個區塊
         if (currentSection) {
           sections.push({
@@ -93,15 +99,15 @@ export default function MarkdownRenderer({ content }) {
           console.log(`✅ [MarkdownRenderer] 完成區塊: ${currentSection.title}, 內容長度: ${currentContent.join('\n').trim().length}`);
         }
         
-        // 開始新區塊
-        const title = line.replace(/^#+\s+/, '').trim();
+        // 開始新區塊 - 移除所有 # 和開頭空格
+        const title = trimmedLine.replace(/^#+\s*/, '').trim();
         currentSection = {
           title,
           isTLDR: title.includes('TL;DR') || title.includes('三句話') || title.includes('今日三句話')
         };
         currentContent = [];
         console.log(`📌 [MarkdownRenderer] 發現新區塊: ${title}`);
-      } else if (line.trim().startsWith('### ')) {
+      } else if (trimmedLine.startsWith('### ')) {
         // H3 標題也加入當前區塊內容
         currentContent.push(line);
       } else {
@@ -151,6 +157,8 @@ export default function MarkdownRenderer({ content }) {
   }
 
   // 渲染每個區塊為獨立卡片
+  console.log(`🎨 [MarkdownRenderer] 開始渲染 ${sections.length} 個卡片區塊`);
+  
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       {sections.map((section, index) => {
@@ -158,11 +166,13 @@ export default function MarkdownRenderer({ content }) {
         const icon = getIcon(cleanTitle);
         const IconComponent = icon;
         
+        console.log(`🎨 [MarkdownRenderer] 渲染區塊 ${index + 1}/${sections.length}: ${section.title}`);
+        
         // TL;DR 特殊樣式
         if (section.isTLDR) {
           return (
             <Card
-              key={index}
+              key={`section-${index}`}
               className="mb-8"
               padding="lg"
               rounded="2xl"
@@ -198,7 +208,7 @@ export default function MarkdownRenderer({ content }) {
         // 其他區塊的卡片樣式
         return (
           <Card
-            key={index}
+            key={`section-${index}`}
             className="mb-8"
             padding="lg"
             rounded="xl"
@@ -213,7 +223,7 @@ export default function MarkdownRenderer({ content }) {
                 {section.title}
               </h2>
             </div>
-            <div className="text-center">
+            <div>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={getMarkdownComponents()}
