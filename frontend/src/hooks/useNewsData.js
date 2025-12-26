@@ -22,9 +22,16 @@ export function useNewsData() {
       q, 
       (snapshot) => {
         console.log('📊 [useNewsData] 收到快照，文件數:', snapshot.size);
+        console.log('📊 [useNewsData] 查詢的 Collection:', 'daily_news');
+        console.log('📊 [useNewsData] 查詢的 Project ID:', import.meta.env.VITE_FIREBASE_PROJECT_ID || '未設定');
         
         if (snapshot.empty) {
           console.warn('⚠️ [useNewsData] 資料庫是空的');
+          console.warn('⚠️ [useNewsData] 可能原因:');
+          console.warn('   1. 後端還沒執行');
+          console.warn('   2. 前端和後端使用不同的 Firebase 專案');
+          console.warn('   3. Firestore 規則不允許讀取');
+          console.warn('   4. Collection 名稱不匹配');
           setNews([]);
           setError('目前沒有新聞資料，請等待後端排程器執行');
         } else {
