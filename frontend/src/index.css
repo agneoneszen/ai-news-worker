@@ -9,6 +9,19 @@
   }
 }
 
+/* Markdown 內容樣式 */
+.markdown-content {
+  @apply text-slate-300;
+}
+
+.markdown-content > *:first-child {
+  @apply mt-0;
+}
+
+.markdown-content > *:last-child {
+  @apply mb-0;
+}
+
 /* 平滑滾動 */
 html {
   scroll-behavior: smooth;
