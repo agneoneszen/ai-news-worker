@@ -8,7 +8,7 @@ import {
   BarChart3,
   Waves,
   Compass,
-  Telescope,
+  Search,
   TrendingDown,
   AlertTriangle,
   ExternalLink,
@@ -93,7 +93,7 @@ export default function NewsCard({ data }) {
               if (content.includes('市場情緒') || content.includes('儀表板')) Icon = BarChart3;
               else if (content.includes('趨勢') || content.includes('核心')) Icon = Waves;
               else if (content.includes('決策') || content.includes('指引')) Icon = Compass;
-              else if (content.includes('監測') || content.includes('清單')) Icon = Telescope;
+              else if (content.includes('監測') || content.includes('清單')) Icon = Search;
               else if (content.includes('分類') || content.includes('摘要')) Icon = FileText;
               else if (content.includes('不確定') || content.includes('反方')) Icon = AlertTriangle;
               else if (content.includes('來源') || content.includes('資訊')) Icon = ExternalLink;
