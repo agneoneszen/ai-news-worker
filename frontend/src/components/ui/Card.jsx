@@ -32,9 +32,9 @@ export default function Card({
   };
 
   const baseClasses = `
-    bg-bg-card
+    bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95
     ${roundedClasses[rounded]}
-    ${border ? 'border border-slate-700/50' : ''}
+    ${border ? 'border-2 border-slate-700/50' : ''}
     ${shadow ? 'shadow-2xl' : ''}
     ${hover ? 'transition-all duration-300 hover:border-primary-500/30 hover:shadow-glow-primary' : ''}
     ${paddingClasses[padding]}
