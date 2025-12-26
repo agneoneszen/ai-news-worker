@@ -5,7 +5,7 @@ import Icon from '../ui/Icon';
 /**
  * 新聞卡片標題組件
  */
-export default function NewsCardHeader({ dateStr, id, createdAt }) {
+export default function NewsCardHeader({ dateStr, id, createdAt, compact = false }) {
   // 格式化時間戳
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return '未知時間';
@@ -35,8 +35,56 @@ export default function NewsCardHeader({ dateStr, id, createdAt }) {
     }
   };
 
+  // 格式化日期（更友好的格式）
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '未知日期';
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) {
+        // 如果不是有效日期，嘗試解析 YYYY-MM-DD 格式
+        const [year, month, day] = dateStr.split('-');
+        if (year && month && day) {
+          return `${year}年${month}月${day}日`;
+        }
+        return dateStr;
+      }
+      return date.toLocaleDateString('zh-TW', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: compact ? undefined : 'long'
+      });
+    } catch (e) {
+      return dateStr;
+    }
+  };
+
+  if (compact) {
+    // 緊湊模式（列表預覽）
+    return (
+      <div className="flex items-center gap-3 mb-3">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <Calendar size={14} className="text-blue-400" />
+          <span className="text-sm font-semibold text-blue-300">
+            {formatDate(dateStr || id)}
+          </span>
+        </div>
+        {createdAt && (
+          <span className="text-xs text-slate-500">
+            {formatTimestamp(createdAt)}
+          </span>
+        )}
+        <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded">
+          <Zap size={12} className="text-blue-400" />
+          <span className="text-xs text-blue-400 font-medium">AI</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 完整模式（展開後）
   return (
-    <header className="bg-slate-800/60 px-6 py-4 border-b border-slate-700/50">
+    <header className="px-6 py-4 border-b border-slate-700/50">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-slate-700/50 rounded-lg">
@@ -47,7 +95,7 @@ export default function NewsCardHeader({ dateStr, id, createdAt }) {
               每日報告
             </span>
             <span className="text-slate-100 font-semibold text-xl block">
-              {dateStr || id}
+              {formatDate(dateStr || id)}
             </span>
             {createdAt && (
               <span className="text-xs text-slate-500 mt-0.5 block">

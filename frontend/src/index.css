@@ -39,6 +39,14 @@
   @apply mt-4;
 }
 
+/* 文字截斷工具類 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* 平滑滾動 */
 html {
   scroll-behavior: smooth;

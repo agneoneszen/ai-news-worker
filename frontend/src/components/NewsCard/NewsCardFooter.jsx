@@ -9,8 +9,45 @@ import Icon from '../ui/Icon';
 export default function NewsCardFooter({ 
   articleCount = 0, 
   categoryCount,
-  categories = [] 
+  categories = [],
+  compact = false
 }) {
+  if (compact) {
+    // 緊湊模式（列表預覽）
+    return (
+      <div className="flex items-center gap-4 flex-wrap mt-3">
+        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <TrendingUp size={14} className="text-blue-400" />
+          <span>{articleCount || 0} 篇文章</span>
+        </div>
+        {categoryCount && (
+          <div className="flex items-center gap-1.5 text-xs text-slate-400">
+            <FileText size={14} className="text-blue-400" />
+            <span>{categoryCount} 個分類</span>
+          </div>
+        )}
+        {categories && categories.length > 0 && (
+          <div className="flex items-center gap-2 flex-wrap">
+            {categories.slice(0, 3).map((cat, i) => (
+              <span 
+                key={i}
+                className="px-2 py-0.5 bg-slate-700/50 text-slate-300 text-xs rounded border border-slate-600/50"
+              >
+                {cat}
+              </span>
+            ))}
+            {categories.length > 3 && (
+              <span className="text-xs text-slate-500">
+                +{categories.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 完整模式（展開後）
   return (
     <footer className="px-6 py-4 bg-slate-800/40 border-t border-slate-700/50">
       <div className="flex flex-wrap gap-3 items-center justify-between">
@@ -32,7 +69,7 @@ export default function NewsCardFooter({
           )}
         </div>
 
-        {categories.length > 0 && (
+        {categories && categories.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {categories.map((category, i) => (
               <span 

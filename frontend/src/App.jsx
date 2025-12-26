@@ -57,14 +57,23 @@ export default function App() {
             <p className="text-slate-500 text-sm">請等待後端排程器執行，或檢查 Firestore 是否有資料</p>
           </div>
         ) : (
-          <div className="space-y-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white mb-1">每日報告</h2>
-              <p className="text-slate-400 text-sm">共 {news.length} 篇報告，按日期排序（最新在前）</p>
+          <div className="space-y-6">
+            {/* 頁面標題和統計 */}
+            <div className="mb-6 pb-4 border-b border-slate-700/50">
+              <h2 className="text-2xl font-bold text-white mb-2">每日報告</h2>
+              <div className="flex items-center gap-4 text-sm text-slate-400">
+                <span>共 {news.length} 篇報告</span>
+                <span>•</span>
+                <span>按日期排序（最新在前）</span>
+              </div>
             </div>
-            {news.map((item) => (
-              <NewsCard key={item.id} data={item} />
-            ))}
+            
+            {/* 報告列表 */}
+            <div className="space-y-4">
+              {news.map((item) => (
+                <NewsCard key={item.id} data={item} />
+              ))}
+            </div>
           </div>
         )}
       </main>
