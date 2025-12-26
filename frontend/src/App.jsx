@@ -32,7 +32,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-12">
+      <main className="max-w-5xl mx-auto px-6 py-12">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-6">
             <div className="relative">
