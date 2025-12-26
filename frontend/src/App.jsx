@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNewsData } from './hooks/useNewsData'; // ✨ 確保這裡有加花括號
 import NewsCard from './components/NewsCard';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, FileText } from 'lucide-react';
 
 export default function App() {
   const { news, loading, error } = useNewsData();
@@ -14,37 +14,49 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">AI</div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-800">Daily Insight</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 font-sans">
+      <header className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-10 shadow-lg">
+        <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/30">
+              AI
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-white">Daily Insight</h1>
+              <p className="text-xs text-slate-400">AI-Powered News Intelligence</p>
+            </div>
           </div>
-          <div className="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Beta v1.0</div>
+          <div className="text-xs text-slate-300 bg-slate-800/50 border border-slate-700/50 px-4 py-1.5 rounded-full font-medium">
+            Beta v1.0
+          </div>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-8">
+      <main className="max-w-4xl mx-auto px-6 py-12">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 text-slate-400 space-y-4">
-            <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
-            <p>正在同步最新的 AI 分析報告...</p>
+          <div className="flex flex-col items-center justify-center py-32 space-y-6">
+            <div className="relative">
+              <Loader2 className="w-16 h-16 animate-spin text-blue-400" />
+              <div className="absolute inset-0 w-16 h-16 border-4 border-blue-500/20 rounded-full"></div>
+            </div>
+            <p className="text-slate-300 text-lg font-medium">正在同步最新的 AI 分析報告...</p>
+            <p className="text-slate-500 text-sm">這可能需要幾秒鐘</p>
           </div>
         ) : error ? (
-          <div className="text-center py-20 bg-red-50 rounded-2xl border border-red-200">
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600 font-semibold mb-2">讀取資料時發生錯誤</p>
-            <p className="text-red-500 text-sm">{error}</p>
-            <p className="text-slate-500 text-xs mt-4">請檢查 Firebase 配置和 Firestore 規則</p>
+          <div className="text-center py-24 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-3xl border border-red-500/30 backdrop-blur-sm">
+            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-6" />
+            <p className="text-red-300 font-semibold text-xl mb-3">讀取資料時發生錯誤</p>
+            <p className="text-red-400 text-sm mb-6">{error}</p>
+            <p className="text-slate-400 text-xs">請檢查 Firebase 配置和 Firestore 規則</p>
           </div>
         ) : news.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
-            <p className="text-slate-500 mb-2">目前沒有新聞資料</p>
-            <p className="text-slate-400 text-sm">請等待後端排程器執行，或檢查 Firestore 是否有資料</p>
+          <div className="text-center py-24 bg-slate-800/30 rounded-3xl border border-dashed border-slate-700/50 backdrop-blur-sm">
+            <FileText className="w-16 h-16 text-slate-500 mx-auto mb-6" />
+            <p className="text-slate-300 text-lg font-medium mb-2">目前沒有新聞資料</p>
+            <p className="text-slate-500 text-sm">請等待後端排程器執行，或檢查 Firestore 是否有資料</p>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-12">
             {news.map((item) => (
               <NewsCard key={item.id} data={item} />
             ))}
@@ -52,8 +64,13 @@ export default function App() {
         )}
       </main>
 
-      <footer className="border-t border-slate-200 bg-white py-8 mt-12 text-center text-slate-400 text-sm">
-        <p>© 2025 AI News Aggregator. Powered by OpenAI & Firebase.</p>
+      <footer className="border-t border-slate-700/50 bg-slate-900/50 backdrop-blur-sm py-10 mt-16 text-center">
+        <p className="text-slate-400 text-sm">
+          © 2025 AI News Aggregator. Powered by OpenAI & Firebase.
+        </p>
+        <p className="text-slate-500 text-xs mt-2">
+          Daily automated news analysis and intelligence reports
+        </p>
       </footer>
     </div>
   );

@@ -132,9 +132,13 @@ def job_pipeline():
         print("❌ 所有分類分析皆失敗，終止任務。")
         return
 
-    # D. 生成每日決策日報
+    # D. 生成每日決策日報（傳遞原始文章列表以包含來源連結）
     print("📝 [4/5] 正在撰寫每日決策日報...")
-    daily_briefing_md = generate_daily_briefing(category_analyses)
+    # 收集所有已處理的文章（包含 URL）
+    all_processed_articles = []
+    for articles in categorized_articles.values():
+        all_processed_articles.extend(articles)
+    daily_briefing_md = generate_daily_briefing(category_analyses, source_articles=all_processed_articles)
 
     # E. 寫入 Firestore
     print("💾 [5/5] 正在寫入資料庫...")

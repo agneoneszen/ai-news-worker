@@ -307,12 +307,13 @@ def analyze_category_group(category_name, articles_in_category):
         print(f"❌ 分類分析失敗 ({category_name}): {e}")
         return None
 
-def generate_daily_briefing(category_analyses):
+def generate_daily_briefing(category_analyses, source_articles=None):
     """
-    根據分類分析結果生成每日決策日報（優化版：更貼近投資/產品/風控/行動清單）
+    根據分類分析結果生成每日決策日報（優化版：去除 AI 感、更自然流暢）
     
     Args:
         category_analyses: 分類分析結果列表（應包含 analyze_category_group 的完整結果）
+        source_articles: 原始文章列表（包含 URL），用於生成來源連結
     
     Returns:
         Markdown 格式的決策日報
@@ -322,6 +323,8 @@ def generate_daily_briefing(category_analyses):
 
     # 整理資料給 AI（使用結構化結果）
     input_text = ""
+    article_urls_by_category = {}
+    
     for cat_analysis in category_analyses:
         category = cat_analysis.get('category', '未分類')
         executive_summary = cat_analysis.get('executive_summary', cat_analysis.get('summary', ''))
@@ -334,6 +337,18 @@ def generate_daily_briefing(category_analyses):
         confidence = cat_analysis.get('confidence', 0.0)
         uncertainties = cat_analysis.get('uncertainties', [])
         article_count = cat_analysis.get('article_count', 0)
+        article_titles = cat_analysis.get('article_titles', [])
+        
+        # 收集該分類的文章 URL
+        if source_articles:
+            article_urls_by_category[category] = []
+            for article in source_articles:
+                if article.get('category') == category or article.get('title') in article_titles:
+                    article_urls_by_category[category].append({
+                        'title': article.get('title', ''),
+                        'url': article.get('url', ''),
+                        'source': article.get('source', '')
+                    })
         
         input_text += f"\n## {category} ({article_count}篇)\n"
         input_text += f"摘要：{executive_summary}\n"
@@ -371,36 +386,74 @@ def generate_daily_briefing(category_analyses):
     if len(input_text) > 6000: 
         input_text = input_text[:6000] + "..."
 
-    system_prompt = """你是一位加密貨幣與科技產業的「首席策略官（CSO）」，輸出目標是：讓讀者在 3 分鐘內完成今日決策排序。
+    system_prompt = """你是一位經驗豐富的科技與加密產業編輯，擅長將分析報告轉換成自然、流暢、有節奏感的中文內容。
 
-# Rules
-1) 僅能使用輸入的【分類分析結果】；不可新增外部事實或數字。
-2) 先給結論，再給理由；避免空話與口號。
-3) 每段結論盡量落到「行動 / 觀察信號 / 風險邊界」。
-4) 內容以繁體中文為主，專有名詞可保留英文。
+# 核心原則（非常重要）
+1. **使用自然、流暢的中文**：模仿資深作者或記者的手筆，避免機械式表達
+2. **避免 AI 感詞彙**：不要使用「首先、其次、最後」、「總之」、「綜上所述」、「應該注意的是」、「值得注意的是」、「毫無疑問」、「一般來說」等
+3. **主動語態優先**：將被動態轉為主動語態，讓文字更有力量
+4. **長短句交錯**：避免長句堆砌，適當使用短句增加節奏感
+5. **增加人性化細節**：在合適位置加入適度的個人見解、場景化描述或具象比喻（避免老套比喻）
+6. **打破模板結構**：如果原文結構是明顯的「總分總」或「並列式」，請調整段落銜接，讓邏輯自然過渡
+7. **適度冗余**：在不影響核心信息的前提下，可插入少量口語化插入語（如「說起來」、「實際上」）、限定詞（如「在多數情況下」、「或許」）或輕微的語氣詞
+8. **避免完美主義**：可輕微調整論點，使其看起來更像個人觀點而非絕對真理
+9. **使用具體生動的動詞和名詞**：減少抽象詞彙
+10. **增加互動感**：可隨機將部分陳述句改為反問句或設問句
 
-# Output: Markdown structure (must follow)
-1) 今日三句話（TL;DR）
-2) 📊 市場情緒儀表板（情緒、熱詞、資金/監管/資安主導因子）
-3) 🌊 核心趨勢分析（3-5條 storylines；每條含：影響、時間尺度、要追的信號）
-4) 🧭 決策指引（分成：投資/交易、產品/工程、營運/風控；每段 3-6 bullets）
-5) 🔭 今日監測清單（5-10個 signals_to_watch，做成 checklist）
-6) 📈 分類摘要（每分類 3 bullets；附 confidence）
-7) 🧱 不確定性與反方觀點（列 3-6 點，避免單邊）
+# 輸出結構（Markdown）
+1) **今日三句話（TL;DR）** - 用自然的口吻總結，不要用「首先、其次」
+2) **📊 市場情緒儀表板** - 情緒、熱詞、資金/監管/資安主導因子
+3) **🌊 核心趨勢分析** - 3-5條 storylines，每條含影響、時間尺度、要追的信號
+4) **🧭 決策指引** - 分成投資/交易、產品/工程、營運/風控，每段 3-6 個要點
+5) **🔭 今日監測清單** - 5-10個 signals_to_watch，做成 checklist
+6) **📈 分類摘要** - 每分類 3 個要點，附 confidence
+7) **🧱 不確定性與反方觀點** - 列 3-6 點，避免單邊
+8) **🔗 資訊來源** - 列出相關新聞來源連結（格式：標題 - 來源）
 
-# Style constraints
-- 用短句、短段落、要點化。
-- Bullet 以「可執行」為優先：動詞開頭（追蹤/暫停/評估/對沖/確認…）。"""
+# 風格要求
+- 用短句、短段落、要點化
+- Bullet 以「可執行」為優先：動詞開頭（追蹤/暫停/評估/對沖/確認…）
+- 避免過於制式的表達，讓文字有溫度
+- 直接輸出潤色後的全文，無需解釋修改了哪裡"""
 
+    # 添加來源連結資訊到輸入
+    if source_articles and article_urls_by_category:
+        input_text += "\n\n## 資訊來源\n"
+        for category, urls in article_urls_by_category.items():
+            if urls:
+                input_text += f"\n### {category}\n"
+                for article_info in urls[:5]:  # 每個分類最多顯示5個連結
+                    title = article_info.get('title', '')
+                    url = article_info.get('url', '')
+                    source = article_info.get('source', '')
+                    if url:
+                        input_text += f"- [{title}]({url}) - {source}\n"
+    
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": f"【分類分析結果】\n{input_text}"}
+                {"role": "user", "content": f"【分類分析結果】\n{input_text}\n\n請根據以上內容生成自然流暢的日報，並在最後附上資訊來源連結。"}
             ],
-            temperature=0.55,  # 優化：0.5~0.6，使用 0.55
+            temperature=0.7,  # 提高溫度以增加創造性和自然度
         )
-        return response.choices[0].message.content.strip()
+        result = response.choices[0].message.content.strip()
+        
+        # 確保來源連結已包含（如果 AI 沒有生成，手動添加）
+        if source_articles and article_urls_by_category and "🔗 資訊來源" not in result and "資訊來源" not in result:
+            result += "\n\n---\n\n## 🔗 資訊來源\n\n"
+            for category, urls in article_urls_by_category.items():
+                if urls:
+                    result += f"### {category}\n\n"
+                    for article_info in urls[:5]:
+                        title = article_info.get('title', '')
+                        url = article_info.get('url', '')
+                        source = article_info.get('source', '')
+                        if url:
+                            result += f"- [{title}]({url}) - *{source}*\n"
+                    result += "\n"
+        
+        return result
     except Exception as e:
         return f"⚠️ 報告生成失敗: {e}"
