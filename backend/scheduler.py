@@ -132,7 +132,8 @@ def job_pipeline():
                 'confidence': cat_analysis.get('confidence', 0.0)
             })
         
-        db.collection('daily_news').document(today_str).set({
+        # 準備寫入資料
+        doc_data = {
             'date_str': today_str,
             'content': daily_briefing_md,
             'article_count': total_articles,
@@ -141,10 +142,25 @@ def job_pipeline():
             'category_summaries': category_summaries,  # 新增：分類摘要
             'created_at': firestore.SERVER_TIMESTAMP,
             'status': 'published'
-        })
+        }
         
-        print(f"✅ 任務成功！真實日報已存入: daily_news/{today_str}")
-        print(f"   📊 統計: {total_articles} 篇文章，{len(category_analyses)} 個分類")
+        print(f"💾 準備寫入資料到: daily_news/{today_str}")
+        print(f"   - 內容長度: {len(daily_briefing_md)} 字元")
+        print(f"   - 文章數: {total_articles}")
+        print(f"   - 分類數: {len(category_analyses)}")
+        
+        # 寫入 Firestore
+        doc_ref = db.collection('daily_news').document(today_str)
+        doc_ref.set(doc_data)
+        
+        # 驗證寫入
+        verify_doc = doc_ref.get()
+        if verify_doc.exists:
+            print(f"✅ 任務成功！真實日報已存入: daily_news/{today_str}")
+            print(f"   📊 統計: {total_articles} 篇文章，{len(category_analyses)} 個分類")
+            print(f"   ✅ Firestore 寫入驗證成功")
+        else:
+            print(f"⚠️  警告: 寫入後驗證失敗，請檢查 Firestore 權限")
 
     except Exception as e:
         print(f"❌ Firestore 寫入錯誤: {e}")
