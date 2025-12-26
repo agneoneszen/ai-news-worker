@@ -66,7 +66,7 @@ export default function App() {
                 <ArrowLeft size={20} className="text-slate-700" />
               </button>
               <div>
-                <h1 className="text-lg font-semibold text-slate-900">Daily Insight</h1>
+                <h1 className="text-xl font-bold text-slate-900">Daily Insight</h1>
                 <div className="flex items-center gap-2 mt-0.5">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-xs text-slate-500">連線</span>
@@ -151,7 +151,7 @@ export default function App() {
       </main>
 
       {/* 浮動操作按鈕 */}
-      <button className="fixed bottom-24 right-4 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center z-40">
+      <button className="fixed bottom-20 right-4 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center z-40">
         <Plus size={24} />
       </button>
 

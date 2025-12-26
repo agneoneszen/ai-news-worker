@@ -317,28 +317,28 @@ function getMarkdownComponents() {
       );
     },
     
-    // 有序列表 - 左對齊（參考圖片設計）
+    // 有序列表 - 左對齊（參考 Travel OS 設計）
     ol: ({node, children, ...props}) => (
       <ol className="space-y-2 my-3 list-decimal pl-5 marker:text-blue-500">
         {children}
       </ol>
     ),
     
-    // 強調 - 參考圖片設計
+    // 強調 - 參考 Travel OS 設計
     strong: ({node, children, ...props}) => (
       <strong className="text-slate-900 font-semibold">
         {children}
       </strong>
     ),
     
-    // 引用 - 參考圖片設計
+    // 引用 - 參考 Travel OS 設計
     blockquote: ({node, children, ...props}) => (
       <blockquote className="border-l-4 border-blue-300 pl-4 italic text-slate-600 my-4 bg-blue-50 py-3 rounded-r-lg">
         {children}
       </blockquote>
     ),
     
-    // 代碼 - 參考圖片設計
+    // 代碼 - 參考 Travel OS 設計
     code: ({node, inline, children, ...props}) => {
       if (inline) {
         return (

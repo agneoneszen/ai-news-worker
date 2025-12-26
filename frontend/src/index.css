@@ -9,9 +9,9 @@
   }
 }
 
-/* Markdown 內容樣式 - 參考 Medium 設計 */
+/* Markdown 內容樣式 - 參考 Travel OS 設計 */
 .markdown-content {
-  @apply text-slate-300;
+  @apply text-slate-700;
   line-height: 1.75;
 }
 

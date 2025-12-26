@@ -25,7 +25,7 @@ export default function BottomNav({ activeTab, onTabChange }) {
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
                 className={`
-                  flex flex-col items-center gap-1 px-4 py-2 transition-colors
+                  relative flex flex-col items-center gap-1 px-4 py-2 transition-colors
                   ${isActive ? 'text-blue-500' : 'text-slate-500'}
                 `}
               >
