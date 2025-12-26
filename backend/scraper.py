@@ -14,6 +14,46 @@ RSS_FEEDS = [
         "source": "CoinDesk",
         "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
         "category": "Crypto"
+    },
+    {
+        "source": "TechCrunch",
+        "url": "https://techcrunch.com/feed/",
+        "category": "Tech"
+    },
+    {
+        "source": "Ars Technica",
+        "url": "https://feeds.arstechnica.com/arstechnica/index",
+        "category": "Tech"
+    },
+    {
+        "source": "Wired",
+        "url": "https://www.wired.com/feed/rss",
+        "category": "Tech"
+    },
+    {
+        "source": "CoinTelegraph",
+        "url": "https://cointelegraph.com/rss",
+        "category": "Crypto"
+    },
+    {
+        "source": "Decrypt",
+        "url": "https://decrypt.co/feed",
+        "category": "Crypto"
+    },
+    {
+        "source": "The Block",
+        "url": "https://www.theblock.co/rss.xml",
+        "category": "Crypto"
+    },
+    {
+        "source": "Hacker News",
+        "url": "https://hnrss.org/frontpage",
+        "category": "Tech"
+    },
+    {
+        "source": "VentureBeat",
+        "url": "https://venturebeat.com/feed/",
+        "category": "Tech"
     }
 ]
 
@@ -53,9 +93,9 @@ def get_today_news():
                         # 如果沒有 published_parsed，嘗試解析 published 字串
                         published_str = entry.get('published', '')
                         if published_str:
-                            published_dt = date_parser.parse(published_str)
-                            if published_dt.tzinfo is None:
-                                published_dt = published_dt.replace(tzinfo=datetime.timezone.utc)
+                            published_str = date_parser.parse(published_str)
+                            if published_str.tzinfo is None:
+                                published_str = published_str.replace(tzinfo=datetime.timezone.utc)
                         else:
                             # 如果完全沒有時間資訊，跳過
                             continue
