@@ -179,29 +179,32 @@ def job_pipeline():
         print(f"❌ Firestore 寫入錯誤: {e}")
 
 # ---------------------------------------------------------
-# 3. 排程設定
+# 3. 排程設定（測試模式：暫停自動排程）
 # ---------------------------------------------------------
-# 每天 09:00 UTC 執行（可根據需求調整）
-schedule.every().day.at("09:00").do(job_pipeline)
+# ⚠️ 測試模式：已暫停自動排程
+# schedule.every().day.at("09:00").do(job_pipeline)
 
-# 也可以設定每小時執行（測試用，部署時請移除）
-# schedule.every().hour.do(job_pipeline)
-
-# 立即執行一次（用於首次部署測試，執行後可註解掉）
-print("🧪 立即執行一次測試...")
+# 立即執行一次（測試用）
+print("🧪 [測試模式] 立即執行一次測試...")
+print("⚠️  注意：自動排程已暫停，僅執行一次")
 job_pipeline()
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("⏰ AI News Worker 排程器已啟動")
+    print("🧪 AI News Worker 排程器（測試模式）")
     print("=" * 60)
-    print(f"📅 下次執行時間: {schedule.next_run()}")
-    print(f"🔄 檢查間隔: 每 60 秒")
+    print("⚠️  自動排程已暫停")
+    print("✅ 已執行一次測試任務")
     print("=" * 60)
     print("")
+    print("💡 測試完成後，請取消註解 schedule 相關代碼以啟用自動排程")
+    print("")
     
-    # 主循環
-    while True:
-        schedule.run_pending()
-        time.sleep(60)  # 每分鐘檢查一次
+    # 測試模式：不進入主循環，執行完畢後退出
+    # 如果需要持續運行，可以取消下面的註解
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(60)  # 每分鐘檢查一次
+    
+    print("✅ 測試執行完成，程序結束")
 

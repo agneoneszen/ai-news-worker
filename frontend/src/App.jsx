@@ -57,6 +57,10 @@ export default function App() {
           </div>
         ) : (
           <div className="space-y-12">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-2">每日報告列表</h2>
+              <p className="text-slate-400 text-sm">共 {news.length} 篇報告，按日期排序（最新在前）</p>
+            </div>
             {news.map((item) => (
               <NewsCard key={item.id} data={item} />
             ))}

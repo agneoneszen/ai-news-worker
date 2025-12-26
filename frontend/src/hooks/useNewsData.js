@@ -29,12 +29,12 @@ export function useNewsData() {
     };
     testQuery();
     
-    // 查詢 daily_news collection，取最新 5 筆
+    // 查詢 daily_news collection，獲取所有文章
     // 注意：如果使用 orderBy，需要在 Firestore 建立索引
-    // 暫時不使用 orderBy，直接取前 5 筆，然後在客戶端排序
+    // 暫時不使用 orderBy，直接取所有，然後在客戶端排序
     const q = query(
-      collection(db, "daily_news"),
-      limit(10) // 多取一些以確保有資料
+      collection(db, "daily_news")
+      // 移除 limit，獲取所有文章
     );
 
     const unsubscribe = onSnapshot(
@@ -85,11 +85,8 @@ export function useNewsData() {
             return dateB.localeCompare(dateA); // 降序
           });
           
-          // 只取前 5 筆
-          const latestNews = newsData.slice(0, 5);
-          
-          console.log('✅ [useNewsData] 成功載入', latestNews.length, '筆資料');
-          setNews(latestNews);
+          console.log('✅ [useNewsData] 成功載入', newsData.length, '筆資料');
+          setNews(newsData);
           setError(null);
         }
         setLoading(false);
