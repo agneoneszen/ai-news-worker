@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { 
   Zap, 
   BarChart3,
@@ -56,6 +57,7 @@ export default function MarkdownRenderer({ content }) {
   return (
     <div className="space-y-6">
       <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
         components={{
           // H1 樣式 - TL;DR 特殊處理
           h1: ({node, children, ...props}) => {
@@ -89,11 +91,36 @@ export default function MarkdownRenderer({ content }) {
             );
           },
           
-          // H2 樣式 - 卡片式區塊標題
+          // H2 樣式 - 卡片式區塊標題（處理可能是 H2 的 TL;DR）
           h2: ({node, children, ...props}) => {
+            const content = String(children);
+            
+            // 檢查是否為 TL;DR（可能是 H2 格式）
+            const isTLDR = content.includes('TL;DR') || 
+                          content.includes('三句話') || 
+                          content.includes('今日三句話');
+            
+            if (isTLDR) {
+              return (
+                <div className="bg-gradient-to-r from-primary-500/15 via-primary-600/10 to-primary-500/15 rounded-2xl border-2 border-primary-500/40 p-6 mb-8 shadow-lg shadow-glow-primary">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Icon 
+                      icon={Zap} 
+                      container 
+                      containerSize="md"
+                      color="primary"
+                    />
+                    <h2 className="text-2xl font-bold text-primary-300 m-0">
+                      {children}
+                    </h2>
+                  </div>
+                </div>
+              );
+            }
+            
             // 處理可能包含 emoji 的標題
-            const content = String(children).replace(/[📊🌊🧭🔭📈🧱🔗]/g, '').trim();
-            const icon = getIcon(content);
+            const cleanContent = content.replace(/[📊🌊🧭🔭📈🧱🔗]/g, '').trim();
+            const icon = getIcon(cleanContent);
             const IconComponent = icon;
             
             return (
@@ -109,6 +136,7 @@ export default function MarkdownRenderer({ content }) {
               </div>
             );
           },
+          
           
           // H3 樣式 - 子標題
           h3: ({node, children, ...props}) => (
@@ -139,30 +167,98 @@ export default function MarkdownRenderer({ content }) {
             </a>
           ),
           
-          // 無序列表
-          ul: ({node, children, ...props}) => (
-            <ul className="space-y-3 my-5 ml-4 list-disc marker:text-primary-500">
-              {children}
-            </ul>
-          ),
-          
-          // 列表項 - 支持 checkbox
-          li: ({node, children, ...props}) => {
-            const content = String(children);
-            const isCheckbox = content.startsWith('[ ]') || content.startsWith('[x]') || content.startsWith('[X]');
+          // 無序列表 - 檢查是否為監測清單
+          ul: ({node, children, ...props}) => {
+            // 檢查父節點是否是監測清單（通過檢查前一個兄弟節點）
+            const parent = node.parent;
+            let isChecklist = false;
             
-            if (isCheckbox) {
-              const isChecked = content.startsWith('[x]') || content.startsWith('[X]');
-              const text = content.replace(/^\[[xX ]\]\s*/, '');
+            if (parent && parent.children) {
+              const index = parent.children.indexOf(node);
+              if (index > 0) {
+                const prevSibling = parent.children[index - 1];
+                if (prevSibling && prevSibling.type === 'heading') {
+                  const headingText = String(prevSibling.children?.[0]?.value || '');
+                  if (headingText.includes('監測') || headingText.includes('清單')) {
+                    isChecklist = true;
+                  }
+                }
+              }
+            }
+            
+            if (isChecklist) {
               return (
-                <li className="text-text-secondary my-2 pl-2 leading-relaxed flex items-start gap-2">
+                <ul className="space-y-3 my-5 ml-4 list-none">
+                  {children}
+                </ul>
+              );
+            }
+            
+            return (
+              <ul className="space-y-3 my-5 ml-4 list-disc marker:text-primary-500">
+                {children}
+              </ul>
+            );
+          },
+          
+          // 列表項 - 支持 checkbox 和普通列表
+          li: ({node, children, ...props}) => {
+            // ReactMarkdown + remark-gfm 會將 checkbox 轉換為特殊的結構
+            const childrenArray = React.Children.toArray(children);
+            
+            // 檢查第一個子元素是否為 checkbox input（remark-gfm 的格式）
+            if (childrenArray.length > 0) {
+              const firstChild = childrenArray[0];
+              if (React.isValidElement(firstChild) && firstChild.type === 'input' && firstChild.props.type === 'checkbox') {
+                return (
+                  <li className="text-text-secondary my-2 pl-2 leading-relaxed flex items-start gap-2 list-none">
+                    <input 
+                      type="checkbox" 
+                      checked={firstChild.props.checked || false}
+                      readOnly
+                      className="mt-1.5 w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500 cursor-default"
+                    />
+                    <span>{childrenArray.slice(1)}</span>
+                  </li>
+                );
+              }
+            }
+            
+            // 檢查父節點是否是監測清單
+            const parent = node.parent;
+            let isChecklist = false;
+            if (parent && parent.children) {
+              const index = parent.children.indexOf(node);
+              if (index > 0) {
+                // 向上查找標題
+                for (let i = index - 1; i >= 0; i--) {
+                  const sibling = parent.children[i];
+                  if (sibling && sibling.type === 'heading') {
+                    const headingText = String(sibling.children?.[0]?.value || '');
+                    if (headingText.includes('監測') || headingText.includes('清單') || headingText.includes('🔭')) {
+                      isChecklist = true;
+                      break;
+                    }
+                  }
+                  if (sibling && sibling.type !== 'paragraph' && sibling.type !== 'list') {
+                    break;
+                  }
+                }
+              }
+            }
+            
+            // 如果是監測清單，即使沒有 checkbox 格式也顯示為 checkbox
+            if (isChecklist) {
+              const content = String(children).trim();
+              return (
+                <li className="text-text-secondary my-2 pl-2 leading-relaxed flex items-start gap-2 list-none">
                   <input 
                     type="checkbox" 
-                    checked={isChecked}
+                    checked={false}
                     readOnly
-                    className="mt-1.5 w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500"
+                    className="mt-1.5 w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500 cursor-default"
                   />
-                  <span>{text}</span>
+                  <span>{content}</span>
                 </li>
               );
             }
