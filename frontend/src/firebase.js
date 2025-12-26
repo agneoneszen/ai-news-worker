@@ -10,5 +10,20 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || "..."
 };
 
+// 調試：檢查配置
+if (import.meta.env.DEV) {
+  console.log('🔧 [Firebase] 配置檢查:');
+  console.log('  - API Key:', import.meta.env.VITE_FIREBASE_API_KEY ? '已設定' : '❌ 未設定');
+  console.log('  - Project ID:', import.meta.env.VITE_FIREBASE_PROJECT_ID || '❌ 未設定');
+  console.log('  - Auth Domain:', import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '❌ 未設定');
+}
+
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+
+// 驗證連接
+db.enableNetwork().then(() => {
+  console.log('✅ [Firebase] Firestore 連接成功');
+}).catch((error) => {
+  console.error('❌ [Firebase] Firestore 連接失敗:', error);
+});

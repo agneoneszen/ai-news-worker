@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase'; 
-import { collection, query, onSnapshot, limit, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot, limit } from 'firebase/firestore';
 
 export function useNewsData() {
   const [news, setNews] = useState([]);
@@ -10,11 +10,12 @@ export function useNewsData() {
   useEffect(() => {
     console.log('🔍 [useNewsData] 開始讀取 Firestore...');
     
-    // 查詢 daily_news collection，按日期降序排列，取最新 5 筆
+    // 查詢 daily_news collection，取最新 5 筆
+    // 注意：如果使用 orderBy，需要在 Firestore 建立索引
+    // 暫時不使用 orderBy，直接取前 5 筆，然後在客戶端排序
     const q = query(
       collection(db, "daily_news"),
-      orderBy("created_at", "desc"), // 按建立時間降序
-      limit(5)
+      limit(10) // 多取一些以確保有資料
     );
 
     const unsubscribe = onSnapshot(
@@ -33,11 +34,23 @@ export function useNewsData() {
             return {
               id: doc.id,
               date_str: data.date_str || doc.id, 
+              created_at: data.created_at,
               ...data
             };
           });
-          console.log('✅ [useNewsData] 成功載入', newsData.length, '筆資料');
-          setNews(newsData);
+          
+          // 按日期降序排序（最新的在前）
+          newsData.sort((a, b) => {
+            const dateA = a.date_str || a.id;
+            const dateB = b.date_str || b.id;
+            return dateB.localeCompare(dateA); // 降序
+          });
+          
+          // 只取前 5 筆
+          const latestNews = newsData.slice(0, 5);
+          
+          console.log('✅ [useNewsData] 成功載入', latestNews.length, '筆資料');
+          setNews(latestNews);
           setError(null);
         }
         setLoading(false);
