@@ -157,11 +157,11 @@ export default function MarkdownRenderer({ content }) {
     );
   }
 
-  // 渲染每個區塊為獨立卡片 - 參考 Medium/Reddit 設計
-  console.log(`🎨 [MarkdownRenderer] 開始渲染 ${sections.length} 個卡片區塊`);
-  
-  return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+  // 渲染每個區塊為連續文章流 - Medium 風格
+        console.log(`🎨 [MarkdownRenderer] 開始渲染 ${sections.length} 個文章區塊`);
+        
+        return (
+          <div className="max-w-3xl mx-auto">
       {sections.map((section, index) => {
         const cleanTitle = section.title.replace(/[📊🌊🧭🔭📈🧱🔗]/g, '').trim();
         const icon = getIcon(cleanTitle);
@@ -169,37 +169,29 @@ export default function MarkdownRenderer({ content }) {
         
         console.log(`🎨 [MarkdownRenderer] 渲染區塊 ${index + 1}/${sections.length}: ${section.title}`);
         
-        // TL;DR 特殊樣式 - 符合設計系統規範
+        // TL;DR 特殊樣式 - Medium 風格：輕微背景色，無邊框
         if (section.isTLDR) {
           return (
             <article
               key={`section-${index}`}
               className="
-                bg-blue-50 
-                rounded-lg 
-                border-2 border-blue-200 
-                p-6 mb-6 
-                shadow-sm 
-                hover:shadow-md 
-                transition-all duration-200
+                bg-blue-50/50 
+                rounded-xl 
+                p-8 mb-8 
+                border-l-4 border-blue-500
               "
             >
-              <header className="mb-6 pb-4 border-b border-blue-200">
-                <div className="flex items-center gap-3">
-                  <div className="
-                    p-2 
-                    bg-blue-100 
-                    rounded-lg 
-                    border border-blue-200
-                  ">
-                    <Zap size={18} className="text-blue-600" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-blue-900 m-0">
-                    {section.title}
-                  </h2>
-                </div>
-              </header>
-              <div className="prose prose-invert prose-blue max-w-none">
+              <h2 className="
+                text-3xl 
+                font-bold 
+                text-slate-900 
+                mb-6 
+                pb-3 
+                border-b border-blue-200
+              ">
+                {section.title}
+              </h2>
+              <div className="prose prose-slate max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={getMarkdownComponents()}
@@ -212,36 +204,28 @@ export default function MarkdownRenderer({ content }) {
           );
         }
         
-        // 其他區塊的卡片樣式 - 符合設計系統規範
+        // 其他區塊 - Medium 風格：連續文章流，無卡片邊框
         return (
           <article
             key={`section-${index}`}
             className="
-              bg-white 
-              rounded-lg 
-              border border-slate-200 
-              p-5 mb-4 
-              shadow-sm 
-              hover:shadow-md 
-              transition-all duration-200
+              mb-10 
+              pb-8 
+              border-b border-slate-200 
+              last:border-b-0
             "
           >
-            <header className="mb-6 pb-4 border-b border-slate-200">
-              <div className="flex items-center gap-3">
-                <div className="
-                  p-2 
-                  bg-blue-50 
-                  rounded-lg 
-                  border border-blue-200
-                ">
-                  <IconComponent size={18} className="text-blue-500" />
-                </div>
-                <h2 className="text-xl font-semibold text-slate-900 m-0">
-                  {section.title}
-                </h2>
-              </div>
-            </header>
-            <div className="prose prose-invert prose-slate max-w-none">
+            <h2 className="
+              text-2xl 
+              font-bold 
+              text-slate-900 
+              mb-6 
+              mt-8 
+              first:mt-0
+            ">
+              {section.title}
+            </h2>
+            <div className="prose prose-slate max-w-none">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={getMarkdownComponents()}
@@ -263,31 +247,24 @@ function getMarkdownComponents() {
     // H3 樣式 - Medium 風格：更大字體、更明顯層級
     h3: ({node, children, ...props}) => (
       <h3 className="
-        text-lg 
-        font-semibold 
+        text-xl 
+        font-bold 
         text-slate-900 
-        mt-8 mb-4 
-        flex items-center 
-        gap-2
+        mt-10 mb-5 
       ">
-        <div className="
-          w-1.5 h-1.5 
-          bg-blue-500 
-          rounded-full 
-          flex-shrink-0
-        "></div>
-        <span>{children}</span>
+        {children}
       </h3>
     ),
     
     // 段落樣式 - Medium 風格：更大字體、更寬行高、更大間距
     p: ({node, children, ...props}) => (
       <p className="
-        text-slate-700 
-        leading-7 
-        mb-4 
-        text-base 
+        text-slate-800 
+        leading-8 
+        mb-6 
+        text-lg 
         text-left
+        font-normal
       ">
         {children}
       </p>
@@ -322,7 +299,7 @@ function getMarkdownComponents() {
       </a>
     ),
     
-    // 無序列表 - 左對齊，優化間距（符合設計系統）
+    // 無序列表 - Medium 風格：更大間距
     ul: ({node, children, ...props}) => {
       const childrenArray = React.Children.toArray(children);
       const isChecklist = childrenArray.some(child => 
@@ -335,8 +312,8 @@ function getMarkdownComponents() {
       if (isChecklist) {
         return (
           <ul className="
-            space-y-2.5 
-            my-4 
+            space-y-3 
+            my-6 
             list-none 
             pl-0
           ">
@@ -347,11 +324,12 @@ function getMarkdownComponents() {
       
       return (
         <ul className="
-          space-y-2 
-          my-3 
+          space-y-3 
+          my-6 
           list-disc 
-          pl-5 
+          pl-6 
           marker:text-blue-500
+          marker:text-lg
         ">
           {children}
         </ul>
@@ -368,21 +346,21 @@ function getMarkdownComponents() {
         if (React.isValidElement(firstChild) && firstChild.type === 'input' && firstChild.props.type === 'checkbox') {
           return (
             <li className="
-              text-slate-700 
-              my-2 
-              leading-7 
+              text-slate-800 
+              my-3 
+              leading-8 
               flex items-start 
               gap-3 
               list-none
-              text-base
+              text-lg
             ">
               <input 
                 type="checkbox" 
                 checked={firstChild.props.checked || false}
                 readOnly
                 className="
-                  mt-0.5 
-                  w-4 h-4 
+                  mt-1 
+                  w-5 h-5 
                   rounded 
                   border-slate-300 
                   bg-white 
@@ -400,11 +378,11 @@ function getMarkdownComponents() {
       
       return (
         <li className="
-          text-slate-700 
-          my-2 
-          leading-7 
+          text-slate-800 
+          my-3 
+          leading-8 
           text-left
-          text-base
+          text-lg
         ">
           {children}
         </li>

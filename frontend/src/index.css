@@ -11,9 +11,9 @@
 
 /* Markdown 內容樣式 - Medium 風格：更大字體、更寬行高 */
 .markdown-content {
-  @apply text-slate-700;
-  line-height: 1.75;
-  font-size: 1rem; /* 16px base */
+  @apply text-slate-800;
+  line-height: 1.8;
+  font-size: 1.125rem; /* 18px base */
 }
 
 .markdown-content > *:first-child {
@@ -27,6 +27,16 @@
 /* 優化段落間距 - Medium 風格：更大間距 */
 .markdown-content p + p {
   @apply mt-6;
+}
+
+/* Medium 風格：列表間距 */
+.markdown-content ul,
+.markdown-content ol {
+  @apply my-6;
+}
+
+.markdown-content li {
+  @apply my-3;
 }
 
 /* 優化標題間距 - Medium 風格：更大間距 */
