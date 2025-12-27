@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # 引入模組
 from ai_service import analyze_article, analyze_category_group, generate_daily_briefing
 from scraper import get_today_news  # 使用剛剛修改過的嚴格版爬蟲
+from markdown_parser import parse_daily_briefing  # 引入 Markdown 解析器
 from collections import defaultdict
 
 load_dotenv()
@@ -136,14 +137,19 @@ def job_pipeline():
                 'confidence': cat_analysis.get('confidence', 0.0)
             })
         
+        # 解析 Markdown 內容為結構化格式
+        print("📊 正在解析 Markdown 內容為結構化格式...")
+        structured_content = parse_daily_briefing(daily_briefing_md)
+        
         # 準備寫入資料
         doc_data = {
             'date_str': today_str,
-            'content': daily_briefing_md,
+            'content': daily_briefing_md,  # 保留原始 Markdown（向後兼容）
+            'structured': structured_content,  # 新增：結構化內容
             'article_count': total_articles,
             'category_count': len(category_analyses),
             'categories': [cat.get('category') for cat in category_analyses],
-            'category_summaries': category_summaries,  # 新增：分類摘要
+            'category_summaries': category_summaries,  # 分類摘要
             'created_at': firestore.SERVER_TIMESTAMP,
             'status': 'published'
         }

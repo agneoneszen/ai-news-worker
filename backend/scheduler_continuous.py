@@ -15,6 +15,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # 引入模組
 from ai_service import analyze_article, analyze_category_group, generate_daily_briefing
 from scraper import get_today_news
+from markdown_parser import parse_daily_briefing  # 引入 Markdown 解析器
 from collections import defaultdict
 
 load_dotenv()
