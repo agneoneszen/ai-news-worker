@@ -4,13 +4,13 @@ import DebugInfo from '../DebugInfo';
 
 /**
  * 新聞卡片內容組件
+ * 顯示完整的 Markdown 內容
  */
 export default function NewsCardContent({ content, data }) {
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-6">
       <DebugInfo data={data} />
       <MarkdownRenderer content={content} />
     </div>
   );
 }
-

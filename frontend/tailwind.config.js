@@ -6,37 +6,48 @@ export default {
   ],
   theme: {
     extend: {
-      // 顏色系統 - 語義化命名
+      // 顏色系統 - AI News Worker 設計系統
       colors: {
-        // 主色調 - Amber
-        primary: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',  // 主要使用
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+        // 主色調 - Blue（天空藍）
+        'hero-blue': {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          400: '#60a5fa',
+          500: '#3b82f6',  // 主要品牌色
+          600: '#2563eb',
+          700: '#1d4ed8',
         },
-        // 背景色 - 語義化
-        bg: {
-          primary: '#0f172a',      // slate-900
-          secondary: '#1e293b',    // slate-800
-          tertiary: '#334155',     // slate-700
-          card: 'rgba(30, 41, 59, 0.95)',
-          overlay: 'rgba(15, 23, 42, 0.8)',
+        // 基底色 - Slate（灰藍色系）
+        'hero-slate': {
+          50: '#f8fafc',  // 頁面主背景
+          100: '#f1f5f9', // 卡片背景、次要背景
+          200: '#e2e8f0', // 邊框、分隔線
+          300: '#cbd5e1', // 次要邊框
+          400: '#94a3b8', // 輔助文字
+          500: '#64748b', // 次要文字
+          600: '#475569', // 次要標題
+          700: '#334155', // 主要文字
+          900: '#0f172a', // 標題文字
         },
-        // 文字色 - 語義化
-        text: {
-          primary: '#f1f5f9',      // slate-100
-          secondary: '#cbd5e1',   // slate-300
-          tertiary: '#94a3b8',     // slate-400
-          muted: '#64748b',        // slate-500
+        // 強調色 - Red（紅色）
+        'hero-red': {
+          50: '#fef2f2',
+          200: '#fecaca',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
         },
-        // 語義色
+        // 狀態色 - Green（綠色）
+        'hero-green': {
+          500: '#22c55e', // 連線指示、成功狀態
+        },
+        // 標籤色 - Yellow（黃色）
+        'hero-yellow': {
+          100: '#fef3c7', // 版本標籤背景
+          700: '#a16207', // 版本標籤文字
+        },
+        // 語義色（保持向後兼容）
         semantic: {
           success: {
             light: '#34d399',
@@ -86,7 +97,7 @@ export default {
         'glow-blue': '0 0 20px rgba(59, 130, 246, 0.3)',
         'glow-emerald': '0 0 20px rgba(16, 185, 129, 0.3)',
       },
-      // 動畫
+      // 動畫 - AI News Worker 設計系統
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
@@ -101,6 +112,11 @@ export default {
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+      },
+      // 過渡時間
+      transitionDuration: {
+        '200': '200ms',
+        '300': '300ms',
       },
       // 響應式斷點
       screens: {
