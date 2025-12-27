@@ -340,7 +340,7 @@ function getMarkdownComponents() {
       );
     },
     
-    // 列表項 - 支持 checkbox，左對齊（參考圖片設計）
+    // 列表項 - 支持 checkbox，左對齊（符合設計系統）
     li: ({node, children, ...props}) => {
       const childrenArray = React.Children.toArray(children);
       
@@ -349,12 +349,29 @@ function getMarkdownComponents() {
         const firstChild = childrenArray[0];
         if (React.isValidElement(firstChild) && firstChild.type === 'input' && firstChild.props.type === 'checkbox') {
           return (
-            <li className="text-slate-700 my-1.5 leading-6 flex items-start gap-3 list-none">
+            <li className="
+              text-slate-700 
+              my-1.5 
+              leading-6 
+              flex items-start 
+              gap-3 
+              list-none
+            ">
               <input 
                 type="checkbox" 
                 checked={firstChild.props.checked || false}
                 readOnly
-                className="mt-0.5 w-4 h-4 rounded border-slate-300 bg-white text-blue-500 focus:ring-blue-500 cursor-default flex-shrink-0"
+                className="
+                  mt-0.5 
+                  w-4 h-4 
+                  rounded 
+                  border-slate-300 
+                  bg-white 
+                  text-blue-500 
+                  focus:ring-blue-500 
+                  cursor-default 
+                  flex-shrink-0
+                "
               />
               <span className="flex-1">{childrenArray.slice(1)}</span>
             </li>
@@ -363,44 +380,84 @@ function getMarkdownComponents() {
       }
       
       return (
-        <li className="text-slate-700 my-1.5 leading-6 text-left">
+        <li className="
+          text-slate-700 
+          my-1.5 
+          leading-6 
+          text-left
+        ">
           {children}
         </li>
       );
     },
     
-    // 有序列表 - 左對齊（參考 Travel OS 設計）
+    // 有序列表 - 左對齊（符合設計系統）
     ol: ({node, children, ...props}) => (
-      <ol className="space-y-2 my-3 list-decimal pl-5 marker:text-blue-500">
+      <ol className="
+        space-y-2 
+        my-3 
+        list-decimal 
+        pl-5 
+        marker:text-blue-500
+      ">
         {children}
       </ol>
     ),
     
-    // 強調 - 參考 Travel OS 設計
+    // 強調 - 符合設計系統
     strong: ({node, children, ...props}) => (
       <strong className="text-slate-900 font-semibold">
         {children}
       </strong>
     ),
     
-    // 引用 - 參考 Travel OS 設計
+    // 引用 - 符合設計系統
     blockquote: ({node, children, ...props}) => (
-      <blockquote className="border-l-4 border-blue-300 pl-4 italic text-slate-600 my-4 bg-blue-50 py-3 rounded-r-lg">
+      <blockquote className="
+        border-l-4 
+        border-blue-300 
+        pl-4 
+        italic 
+        text-slate-600 
+        my-4 
+        bg-blue-50 
+        py-3 
+        rounded-r-lg
+      ">
         {children}
       </blockquote>
     ),
     
-    // 代碼 - 參考 Travel OS 設計
+    // 代碼 - 符合設計系統
     code: ({node, inline, children, ...props}) => {
       if (inline) {
         return (
-          <code className="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-sm font-mono border border-blue-200">
+          <code className="
+            text-blue-700 
+            bg-blue-50 
+            px-1.5 py-0.5 
+            rounded 
+            text-sm 
+            font-mono 
+            border border-blue-200
+          ">
             {children}
           </code>
         );
       }
       return (
-        <code className="block text-slate-800 bg-slate-100 border border-slate-200 rounded-lg p-4 text-sm font-mono overflow-x-auto my-4">
+        <code className="
+          block 
+          text-slate-800 
+          bg-slate-100 
+          border border-slate-200 
+          rounded-lg 
+          p-4 
+          text-sm 
+          font-mono 
+          overflow-x-auto 
+          my-4
+        ">
           {children}
         </code>
       );
