@@ -184,7 +184,7 @@ export default function MarkdownRenderer({ content }) {
                 transition-all duration-200
               "
             >
-              <header className="mb-4 pb-3 border-b border-blue-200">
+              <header className="mb-6 pb-4 border-b border-blue-200">
                 <div className="flex items-center gap-3">
                   <div className="
                     p-2 
@@ -194,7 +194,7 @@ export default function MarkdownRenderer({ content }) {
                   ">
                     <Zap size={18} className="text-blue-600" />
                   </div>
-                  <h2 className="text-xl font-bold text-blue-900 m-0">
+                  <h2 className="text-2xl font-bold text-blue-900 m-0">
                     {section.title}
                   </h2>
                 </div>
@@ -226,7 +226,7 @@ export default function MarkdownRenderer({ content }) {
               transition-all duration-200
             "
           >
-            <header className="mb-4 pb-3 border-b border-slate-200">
+            <header className="mb-6 pb-4 border-b border-slate-200">
               <div className="flex items-center gap-3">
                 <div className="
                   p-2 
@@ -236,7 +236,7 @@ export default function MarkdownRenderer({ content }) {
                 ">
                   <IconComponent size={18} className="text-blue-500" />
                 </div>
-                <h2 className="text-lg font-semibold text-slate-900 m-0">
+                <h2 className="text-xl font-semibold text-slate-900 m-0">
                   {section.title}
                 </h2>
               </div>
@@ -340,7 +340,7 @@ function getMarkdownComponents() {
       );
     },
     
-    // 列表項 - 支持 checkbox，左對齊（符合設計系統）
+    // 列表項 - Medium 風格：更大字體、更寬行高、更大間距
     li: ({node, children, ...props}) => {
       const childrenArray = React.Children.toArray(children);
       
@@ -351,11 +351,12 @@ function getMarkdownComponents() {
           return (
             <li className="
               text-slate-700 
-              my-1.5 
-              leading-6 
+              my-2 
+              leading-7 
               flex items-start 
               gap-3 
               list-none
+              text-base
             ">
               <input 
                 type="checkbox" 
@@ -382,9 +383,10 @@ function getMarkdownComponents() {
       return (
         <li className="
           text-slate-700 
-          my-1.5 
-          leading-6 
+          my-2 
+          leading-7 
           text-left
+          text-base
         ">
           {children}
         </li>
