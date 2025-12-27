@@ -169,16 +169,29 @@ export default function MarkdownRenderer({ content }) {
         
         console.log(`🎨 [MarkdownRenderer] 渲染區塊 ${index + 1}/${sections.length}: ${section.title}`);
         
-        // TL;DR 特殊樣式 - 參考圖片設計（淺色背景）
+        // TL;DR 特殊樣式 - 符合設計系統規範
         if (section.isTLDR) {
           return (
             <article
               key={`section-${index}`}
-              className="bg-blue-50 rounded-lg border-2 border-blue-200 p-6 mb-6 shadow-sm hover:shadow-md transition-all duration-200"
+              className="
+                bg-blue-50 
+                rounded-lg 
+                border-2 border-blue-200 
+                p-6 mb-6 
+                shadow-sm 
+                hover:shadow-md 
+                transition-all duration-200
+              "
             >
               <header className="mb-4 pb-3 border-b border-blue-200">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg border border-blue-200">
+                  <div className="
+                    p-2 
+                    bg-blue-100 
+                    rounded-lg 
+                    border border-blue-200
+                  ">
                     <Zap size={18} className="text-blue-600" />
                   </div>
                   <h2 className="text-xl font-bold text-blue-900 m-0">
@@ -199,15 +212,28 @@ export default function MarkdownRenderer({ content }) {
           );
         }
         
-        // 其他區塊的卡片樣式 - 參考圖片設計（白色背景）
+        // 其他區塊的卡片樣式 - 符合設計系統規範
         return (
           <article
             key={`section-${index}`}
-            className="bg-white rounded-lg border border-slate-200 p-5 mb-4 shadow-sm hover:shadow-md transition-all duration-200"
+            className="
+              bg-white 
+              rounded-lg 
+              border border-slate-200 
+              p-5 mb-4 
+              shadow-sm 
+              hover:shadow-md 
+              transition-all duration-200
+            "
           >
             <header className="mb-4 pb-3 border-b border-slate-200">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="
+                  p-2 
+                  bg-blue-50 
+                  rounded-lg 
+                  border border-blue-200
+                ">
                   <IconComponent size={18} className="text-blue-500" />
                 </div>
                 <h2 className="text-lg font-semibold text-slate-900 m-0">
@@ -249,21 +275,36 @@ function getMarkdownComponents() {
       </p>
     ),
     
-    // 連結樣式 - 參考圖片設計
+    // 連結樣式 - 符合設計系統規範
     a: ({node, href, children, ...props}) => (
       <a 
         {...props} 
         href={href}
         target="_blank" 
         rel="noopener noreferrer" 
-        className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors font-medium underline decoration-blue-300 underline-offset-2 hover:decoration-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+        className="
+          inline-flex items-center 
+          gap-1.5 
+          text-blue-600 
+          hover:text-blue-700 
+          transition-colors duration-200
+          font-medium 
+          underline 
+          decoration-blue-300 
+          underline-offset-2 
+          hover:decoration-blue-500 
+          focus:outline-none 
+          focus:ring-2 focus:ring-blue-500 
+          focus:ring-offset-2 
+          rounded
+        "
       >
         {children}
         <ExternalLink size={12} className="inline opacity-70" />
       </a>
     ),
     
-    // 無序列表 - 左對齊，優化間距（參考 Medium）
+    // 無序列表 - 左對齊，優化間距（符合設計系統）
     ul: ({node, children, ...props}) => {
       const childrenArray = React.Children.toArray(children);
       const isChecklist = childrenArray.some(child => 
@@ -275,14 +316,25 @@ function getMarkdownComponents() {
       
       if (isChecklist) {
         return (
-          <ul className="space-y-2.5 my-4 list-none pl-0">
+          <ul className="
+            space-y-2.5 
+            my-4 
+            list-none 
+            pl-0
+          ">
             {children}
           </ul>
         );
       }
       
       return (
-        <ul className="space-y-2 my-3 list-disc pl-5 marker:text-blue-500">
+        <ul className="
+          space-y-2 
+          my-3 
+          list-disc 
+          pl-5 
+          marker:text-blue-500
+        ">
           {children}
         </ul>
       );

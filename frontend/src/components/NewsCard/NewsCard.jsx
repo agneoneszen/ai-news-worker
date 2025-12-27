@@ -40,10 +40,24 @@ export default function NewsCard({ data }) {
   const summary = getSummary();
 
   return (
-    <article className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
+    <article className="
+      bg-white 
+      rounded-lg 
+      border border-slate-200 
+      overflow-hidden 
+      shadow-sm 
+      hover:shadow-md 
+      transition-all duration-200
+    ">
       {/* 預覽頭部 - 可點擊展開 */}
       <div 
-        className={`p-4 cursor-pointer hover:bg-slate-50 transition-colors ${isExpanded ? 'border-b border-slate-200' : ''}`}
+        className={`
+          p-4 
+          cursor-pointer 
+          hover:bg-slate-50 
+          transition-colors duration-200
+          ${isExpanded ? 'border-b border-slate-200' : ''}
+        `}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-start justify-between gap-4">
@@ -59,7 +73,7 @@ export default function NewsCard({ data }) {
             {!isExpanded && summary && (
               <div className="mt-3 space-y-2">
                 {summary.map((point, i) => (
-                  <p key={i} className="text-slate-600 text-sm leading-6 line-clamp-2">
+                  <p key={i} className="text-slate-700 text-sm leading-6 line-clamp-2">
                     {point}
                   </p>
                 ))}
@@ -81,11 +95,19 @@ export default function NewsCard({ data }) {
           
           {/* 展開/摺疊按鈕 */}
           <button
-            className="flex-shrink-0 p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="
+              flex-shrink-0 
+              p-2 
+              hover:bg-slate-100 
+              rounded-lg 
+              transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+            "
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
+            aria-label={isExpanded ? '摺疊內容' : '展開內容'}
           >
             {isExpanded ? (
               <ChevronUp size={20} className="text-slate-500" />

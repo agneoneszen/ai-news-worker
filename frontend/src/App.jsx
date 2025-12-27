@@ -55,38 +55,84 @@ export default function App() {
   }, [news, selectedDate, searchTerm]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-20">
-      {/* 頂部導航欄 - 參考圖片設計 */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+    <div className="
+      min-h-screen 
+      bg-slate-50 
+      text-slate-900 
+      font-sans 
+      pb-20
+    ">
+      {/* 頂部導航欄 - 符合設計系統規範 */}
+      <header className="
+        bg-white 
+        border-b border-slate-200 
+        sticky top-0 
+        z-20 
+        shadow-sm
+      ">
         <div className="max-w-4xl mx-auto px-4 py-3">
           {/* 第一行：標題和操作 */}
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <button className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
+              <button 
+                className="
+                  p-1.5 
+                  hover:bg-slate-100 
+                  rounded-lg 
+                  transition-colors duration-200
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                "
+                aria-label="返回"
+              >
                 <ArrowLeft size={20} className="text-slate-700" />
               </button>
               <div>
                 <h1 className="text-xl font-bold text-slate-900">Daily Insight</h1>
                 <div className="flex items-center gap-2 mt-0.5">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-xs text-slate-500">連線</span>
+                  <span className="text-xs text-slate-500 font-medium">連線</span>
                   {dateRange && (
                     <>
                       <span className="text-xs text-slate-400">•</span>
-                      <span className="text-xs text-slate-500">{dateRange}</span>
+                      <span className="text-xs text-slate-500 font-medium">{dateRange}</span>
                     </>
                   )}
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded">
+              <div className="
+                px-2 py-1 
+                bg-yellow-100 
+                text-yellow-700 
+                text-xs 
+                font-medium 
+                rounded
+              ">
                 v1.0.0
               </div>
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+              <button 
+                className="
+                  p-2 
+                  hover:bg-slate-100 
+                  rounded-lg 
+                  transition-colors duration-200
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                "
+                aria-label="分享"
+              >
                 <Users size={18} className="text-slate-700" />
               </button>
-              <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+              <button 
+                className="
+                  p-2 
+                  hover:bg-slate-100 
+                  rounded-lg 
+                  transition-colors duration-200
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                "
+                aria-label="更多選項"
+              >
                 <MoreVertical size={18} className="text-slate-700" />
               </button>
             </div>
@@ -112,30 +158,64 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-4">
+      <main className="
+        max-w-4xl 
+        mx-auto 
+        px-4 py-4
+      ">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-32 space-y-6">
+          <div className="
+            flex flex-col items-center justify-center 
+            py-32 
+            space-y-6
+          ">
             <div className="relative">
               <Loader2 className="w-16 h-16 animate-spin text-blue-500" />
-              <div className="absolute inset-0 w-16 h-16 border-4 border-blue-200 rounded-full"></div>
+              <div className="
+                absolute 
+                inset-0 
+                w-16 h-16 
+                border-4 border-blue-200 
+                rounded-full
+              "></div>
             </div>
-            <p className="text-slate-700 text-lg font-medium">正在同步最新的 AI 分析報告...</p>
-            <p className="text-slate-500 text-sm">這可能需要幾秒鐘</p>
+            <p className="text-slate-700 text-lg font-medium">
+              正在同步最新的 AI 分析報告...
+            </p>
+            <p className="text-slate-500 text-sm font-medium">
+              這可能需要幾秒鐘
+            </p>
           </div>
         ) : error ? (
-          <div className="text-center py-24 bg-red-50 rounded-2xl border border-red-200">
+          <div className="
+            text-center 
+            py-24 
+            bg-red-50 
+            rounded-2xl 
+            border border-red-200
+          ">
             <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6" />
-            <p className="text-red-700 font-semibold text-xl mb-3">讀取資料時發生錯誤</p>
-            <p className="text-red-600 text-sm mb-6">{error}</p>
-            <p className="text-slate-500 text-xs">請檢查 Firebase 配置和 Firestore 規則</p>
+            <p className="text-red-700 font-semibold text-xl mb-3">
+              讀取資料時發生錯誤
+            </p>
+            <p className="text-red-600 text-sm mb-6 font-medium">{error}</p>
+            <p className="text-slate-500 text-xs font-medium">
+              請檢查 Firebase 配置和 Firestore 規則
+            </p>
           </div>
         ) : filteredNews.length === 0 ? (
-          <div className="text-center py-24 bg-slate-100 rounded-2xl border border-dashed border-slate-300">
+          <div className="
+            text-center 
+            py-24 
+            bg-slate-100 
+            rounded-2xl 
+            border border-dashed border-slate-300
+          ">
             <FileText className="w-16 h-16 text-slate-400 mx-auto mb-6" />
             <p className="text-slate-700 text-lg font-medium mb-2">
               {searchTerm || selectedDate ? '沒有找到符合條件的報告' : '目前沒有新聞資料'}
             </p>
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-500 text-sm font-medium">
               {searchTerm || selectedDate 
                 ? '請嘗試調整搜索條件或選擇其他日期' 
                 : '請等待後端排程器執行，或檢查 Firestore 是否有資料'}
@@ -151,7 +231,23 @@ export default function App() {
       </main>
 
       {/* 浮動操作按鈕 */}
-      <button className="fixed bottom-20 right-4 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center z-40">
+      <button 
+        className="
+          fixed bottom-20 right-4 
+          w-14 h-14 
+          bg-blue-500 
+          text-white 
+          rounded-full 
+          shadow-lg 
+          hover:bg-blue-600 
+          active:scale-95
+          transition-all duration-200
+          flex items-center justify-center 
+          z-40
+          focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2
+        "
+        aria-label="新增操作"
+      >
         <Plus size={24} />
       </button>
 

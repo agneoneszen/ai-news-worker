@@ -44,7 +44,13 @@ export default function DateSelector({ dates, selectedDate, onDateSelect, onDate
   };
 
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+    <div className="
+      flex items-center 
+      gap-2 
+      overflow-x-auto 
+      pb-2 
+      scrollbar-hide
+    ">
       {dates.map((dateStr) => {
         const formatted = formatDateButton(dateStr);
         const isSelected = selectedDate === dateStr;
@@ -60,12 +66,20 @@ export default function DateSelector({ dates, selectedDate, onDateSelect, onDate
               }
             }}
             className={`
-              flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200
+              flex-shrink-0 
+              px-4 py-2 
+              rounded-lg 
+              font-medium 
+              text-sm 
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
               ${isSelected 
                 ? 'bg-blue-500 text-white shadow-md' 
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }
             `}
+            aria-label={`選擇日期 ${formatted.day}`}
+            aria-pressed={isSelected}
           >
             <div className="flex items-center gap-2">
               <span className="text-xs">{formatted.weekday}</span>
