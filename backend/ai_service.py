@@ -503,6 +503,28 @@ def generate_daily_briefing(category_analyses, source_articles=None):
         )
         result = response.choices[0].message.content.strip()
         
+        # 後處理：修正「今日三句話」格式（如果 LLM 輸出段落而非列表）
+        # 檢測「今日三句話」區塊，如果內容是段落而非列表，自動轉換
+        if "## 今日三句話" in result or "## 今日三句話（TL;DR）" in result:
+            import re
+            # 匹配「今日三句話」區塊（從標題到下一個 H2 或結尾）
+            pattern = r'(##\s*今日三句話[^\n]*\n)(.*?)(?=\n##|\n---|\Z)'
+            match = re.search(pattern, result, re.DOTALL)
+            if match:
+                header = match.group(1)
+                content = match.group(2).strip()
+                # 檢查是否為列表格式（包含 `- `）
+                if not content.startswith('-') and '\n- ' not in content:
+                    # 將段落轉換為列表
+                    lines = [line.strip() for line in content.split('\n') if line.strip()]
+                    if lines:
+                        # 過濾掉空行和只有標點的行
+                        valid_lines = [line for line in lines if len(line) > 10 and not line.startswith('（')]
+                        if valid_lines:
+                            # 轉換為列表格式
+                            list_content = '\n'.join([f'- {line}' for line in valid_lines[:3]])  # 最多3個要點
+                            result = result.replace(match.group(0), header + list_content)
+        
         # 確保來源連結已包含（如果 AI 沒有生成，手動添加）
         if source_articles and article_urls_by_category and "🔗 資訊來源" not in result and "資訊來源" not in result:
             result += "\n\n---\n\n## 🔗 資訊來源\n\n"
