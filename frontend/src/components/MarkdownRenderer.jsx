@@ -260,17 +260,35 @@ export default function MarkdownRenderer({ content }) {
 // Markdown 組件配置（提取為函數以便復用）- 參考現代資訊網站設計
 function getMarkdownComponents() {
   return {
-    // H3 樣式 - 子標題（左對齊，參考 Travel OS 設計）
+    // H3 樣式 - Medium 風格：更大字體、更明顯層級
     h3: ({node, children, ...props}) => (
-      <h3 className="text-base font-semibold text-slate-900 mt-6 mb-3 flex items-center gap-2">
-        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0"></div>
+      <h3 className="
+        text-lg 
+        font-semibold 
+        text-slate-900 
+        mt-8 mb-4 
+        flex items-center 
+        gap-2
+      ">
+        <div className="
+          w-1.5 h-1.5 
+          bg-blue-500 
+          rounded-full 
+          flex-shrink-0
+        "></div>
         <span>{children}</span>
       </h3>
     ),
     
-    // 段落樣式 - 左對齊，優化行高和間距（參考 Travel OS 設計）
+    // 段落樣式 - Medium 風格：更大字體、更寬行高、更大間距
     p: ({node, children, ...props}) => (
-      <p className="text-slate-700 leading-6 mb-3 text-sm text-left">
+      <p className="
+        text-slate-700 
+        leading-7 
+        mb-4 
+        text-base 
+        text-left
+      ">
         {children}
       </p>
     ),
