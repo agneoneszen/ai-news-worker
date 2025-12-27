@@ -162,9 +162,14 @@ def job_pipeline():
                 'confidence': cat_analysis.get('confidence', 0.0)
             })
         
+        # 解析 Markdown 內容為結構化格式
+        print("📊 正在解析 Markdown 內容為結構化格式...")
+        structured_content = parse_daily_briefing(daily_briefing_md)
+        
         db.collection('daily_news').document(today_str).set({
             'date_str': today_str,
-            'content': daily_briefing_md,
+            'content': daily_briefing_md,  # 保留原始 Markdown（向後兼容）
+            'structured': structured_content,  # 新增：結構化內容
             'article_count': total_articles,
             'category_count': len(category_analyses),
             'categories': [cat.get('category') for cat in category_analyses],
